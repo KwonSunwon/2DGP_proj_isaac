@@ -1,9 +1,9 @@
 from pico2d import *
 import game_framework
 
-import main_menu_state as startState
+import start_state as startState
 
 if __name__ == '__main__':
-    open_canvas(480, 272)
+    open_canvas(1440, 816)
     game_framework.run(startState)
     close_canvas()

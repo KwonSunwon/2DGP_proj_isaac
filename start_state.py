@@ -1,12 +1,12 @@
 from pico2d import *
 import game_framework
 
-name = "MainMenuState"
+name = "StartState"
 
 
 def enter():
     global menu
-    menu = load_image('./resources/title_menu.png')
+    menu = load_image('./resources/ui/title_menu.png')
 
 
 def exit():
@@ -39,6 +39,7 @@ def update():
 
 def draw():
     clear_canvas()
-    menu.clip_composite_draw(0, 272, 480, 272, 0, '', 240, 136, 480, 272)
-    menu.clip_composite_draw(0, 0, 160, 144, 0, '', 0, 0, 160, 144)
+    menu.clip_composite_draw(0, 272, 480, 272, 0, '', 720, 408, 1440, 816)
+    menu.clip_composite_draw(0, 0, 160, 144, 0, '', 690, 300, 480, 432)
+    menu.clip_composite_draw(0, 160, 480, 100, 0, '', 720, 630, 1440, 333)
     update_canvas()
