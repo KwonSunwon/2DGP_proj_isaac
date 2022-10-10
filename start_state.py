@@ -1,8 +1,10 @@
 from pico2d import *
 import game_framework
 
-name = "StartState"
+import main_state
 
+
+name = "StartState"
 
 def enter():
     global menu
@@ -29,8 +31,8 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
-        # elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
-        #     game_framework.change_state('GameState')
+        elif event.type == SDL_KEYDOWN:
+            game_framework.change_state(main_state)
 
 
 def update():
