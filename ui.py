@@ -3,6 +3,8 @@ from pico2d import *
 import character
 # import stage
 
+UI_SIZE = 64
+UI_FONT_SIZE = 50
 
 ### test code ##############################
 heart = {'max': 6, 'cur': 3}
@@ -22,6 +24,7 @@ class UI:
     minimap = None
     minimapIcons = None
     key = None
+    font = None
     
     def __init__(self):
         if (UI.hearts == None):
@@ -32,6 +35,9 @@ class UI:
             self.minimapIcons = load_image('./resources/ui/minimap_icons.png')
         if (UI.key == None):
             self.key = load_image('./resources/ui/key.png')
+        
+        if (UI.font == None):
+            self.font = load_font('./resources/DungGeunMo.ttf', UI_FONT_SIZE)
         
         self.heartState = heart # get heart information from character class
         self.keyState = keyCount # get key information from character class
@@ -59,11 +65,11 @@ class UI:
             pos += 1
     
     def draw_minimap(self):
-        
         pass
     
     def draw_key(self):
-        pass
+        self.key.clip_composite_draw(0, 32, 16, 32, 0, '', 50, height - 120, UI_SIZE / 2, UI_SIZE)
+        self.font.draw(50 + 32, height - 120, '%02d' %self.keyState, (0, 0, 0))
     
     def draw(self):
         self.draw_hearts()
