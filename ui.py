@@ -55,13 +55,13 @@ class UI:
         empty = self.heartState['max'] // 2 - full - half
         pos = 0
         for i in range(full):
-            self.hearts.clip_composite_draw(0, 48, 16, 16, 0, '', 50 + pos * 32, height - 50, 32, 32)
+            self.hearts.clip_composite_draw(0, 48, 16, 16, 0, '', 50 + pos * UI_SIZE, height - 50, UI_SIZE, UI_SIZE)
             pos += 1
         for i in range(half):
-            self.hearts.clip_composite_draw(16, 48, 16, 16, 0, '', 50 + pos * 32, height - 50, 32, 32)
+            self.hearts.clip_composite_draw(16, 48, 16, 16, 0, '', 50 + pos * UI_SIZE, height - 50, UI_SIZE, UI_SIZE)
             pos += 1
         for i in range(empty):
-            self.hearts.clip_composite_draw(32, 48, 16, 16, 0, '', 50 + pos * 32, height - 50, 32, 32)
+            self.hearts.clip_composite_draw(32, 48, 16, 16, 0, '', 50 + pos * UI_SIZE, height - 50, UI_SIZE, UI_SIZE)
             pos += 1
     
     def draw_minimap(self):
