@@ -43,8 +43,7 @@ class UI:
     def update(self):
         pass
     
-    def draw(self):
-        ### draw hearts ###
+    def draw_hearts(self):
         full = self.heartState['cur'] // 2
         half = self.heartState['cur'] % 2
         empty = self.heartState['max'] // 2 - full - half
@@ -58,11 +57,19 @@ class UI:
         for i in range(empty):
             self.hearts.clip_composite_draw(32, 48, 16, 16, 0, '', 50 + pos * 32, height - 50, 32, 32)
             pos += 1
-        ###################
+    
+    def draw_minimap(self):
         
-        ### draw minimap ###
-        
-        ####################
+        pass
+    
+    def draw_key(self):
+        pass
+    
+    def draw(self):
+        self.draw_hearts()
+        self.draw_minimap()
+        self.draw_key()
+        pass
         
     def handle_event(self, event):
         pass
