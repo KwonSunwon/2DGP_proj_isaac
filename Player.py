@@ -35,11 +35,17 @@ class Player:
         self.directionMove = IDLE
         self.directionAttack = IDLE
         self.frame = 0
+        
         self.x = 720
         self.y = 408
+        self.speed = 300
+        
         self.max_hp = 6
         self.cur_hp = 6
-        self.speed = 300
+        
+        self.shootSpeed = 10
+        self.shootCoolTime = 0
+        self.shootFrame = 0
 
     def add_event(self, event):
         pass
@@ -79,6 +85,8 @@ class Player:
             self.lookBody = BACK
             self.y += self.speed * game_framework.frame_time
         
+        self.frame = (self.frame + FRAME_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
+        
         if self.directionAttack == IDLE:
             self.lookHead = self.lookBody
         else:
@@ -90,19 +98,35 @@ class Player:
                 self.lookHead = FRONT
             elif self.directionAttack & BACK:
                 self.lookHead = BACK
+            
+            # print("shootCoolTime : ", self.shootCoolTime)
+            if self.shootCoolTime <= 0:
+                # print("shoot")
+                self.shootCoolTime = self.shootSpeed * 50
+                self.shootFrame = 100
+            
+        if self.shootCoolTime > 0:
+                # print("game_framework.frame_time : ", int(game_framework.frame_time * 1000))
+                self.shootCoolTime -= 1
+        if self.shootFrame > 0:
+            self.shootFrame -= 1
         
-        self.frame = (self.frame + FRAME_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
+        # print("shootFrame : ", self.shootFrame)
+        
+        # self.shootFrame = (self.shootFrame + (FRAME_PER_ACTION * self.shootSpeed)* ACTION_PER_TIME * game_framework.frame_time) % 200
+        # if self.directionAttack == IDLE:
+            # self.shootFrame = 0
 
     ### Draw Functions ###
     def draw_head(self):
         if self.lookHead == FRONT:
-            self.image.clip_composite_draw(0, 480, CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
+            self.image.clip_composite_draw(0 + (clamp(0, int(self.shootFrame), 1) * 32), 480, CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
         elif self.lookHead == BACK:
-            self.image.clip_composite_draw(128, 480, CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
+            self.image.clip_composite_draw(128 + (clamp(0, int(self.shootFrame), 1) * 32), 480, CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
         elif self.lookHead == LEFT:
-            self.image.clip_composite_draw(64, 480, CLIP_SIZE, CLIP_SIZE, pi, 'v', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
+            self.image.clip_composite_draw(64 + (clamp(0, int(self.shootFrame), 1) * 32), 480, CLIP_SIZE, CLIP_SIZE, pi, 'v', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
         elif self.lookHead == RIGHT:
-            self.image.clip_composite_draw(64, 480, CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
+            self.image.clip_composite_draw(64 + (clamp(0, int(self.shootFrame), 1) * 32), 480, CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
     
     def draw_body(self):
         if self.directionMove == IDLE:
