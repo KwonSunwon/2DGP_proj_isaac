@@ -103,15 +103,6 @@ class Player:
             self.image.clip_composite_draw(64, 480, CLIP_SIZE, CLIP_SIZE, pi, 'v', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
         elif self.lookHead == RIGHT:
             self.image.clip_composite_draw(64, 480, CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
-            
-        # if self.lookBody == FRONT or self.lookBody == IDLE:
-        #     self.image.clip_composite_draw(0, 480, CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
-        # elif self.lookBody == LEFT:
-        #     self.image.clip_composite_draw(64, 480, CLIP_SIZE, CLIP_SIZE, pi, 'v', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
-        # elif self.lookBody == RIGHT:
-        #     self.image.clip_composite_draw(64, 480, CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
-        # elif self.lookBody == BACK:
-        #     self.image.clip_composite_draw(128, 480, CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
     
     def draw_body(self):
         if self.directionMove == IDLE:
@@ -147,37 +138,29 @@ class Player:
                 
                 case pico2d.SDLK_a:
                     self.directionMove |= LEFT
-                    # self.lookBody = LEFT
                     return
                 case pico2d.SDLK_d:
                     self.directionMove |= RIGHT
-                    # self.lookBody = RIGHT
                     return
                 case pico2d.SDLK_w:
                     self.directionMove |= BACK
-                    # self.lookBody = BACK
                     return
                 case pico2d.SDLK_s:
                     self.directionMove |= FRONT
-                    # self.lookBody = FRONT
                     return
         ### Key Up ###
         elif event.type == SDL_KEYUP:
             match event.key:
                 case pico2d.SDLK_LEFT:
-                    # print("test - left")
                     self.directionAttack &= ~LEFT
                     return
                 case pico2d.SDLK_RIGHT:
-                    # print("test - right")
                     self.directionAttack &= ~RIGHT
                     return
                 case pico2d.SDLK_UP:
-                    # print("test - up")
                     self.directionAttack &= ~BACK
                     return
                 case pico2d.SDLK_DOWN:
-                    # print("test - down")
                     self.directionAttack &= ~FRONT
                     return
                 
