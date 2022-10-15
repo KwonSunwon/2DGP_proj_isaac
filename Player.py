@@ -23,11 +23,11 @@ TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAME_PER_ACTION = 10
 
-class Character:
+class Player:
     image = None
 
     def __init__(self):
-        if Character.image == None:
+        if Player.image == None:
             self.image = load_image('./resources/character.png')
         
         self.lookHead = FRONT

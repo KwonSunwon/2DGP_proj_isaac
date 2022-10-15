@@ -3,17 +3,17 @@ import game_framework
 import game_world
 
 from ui import UI
-from character import Character
+from Player import Player
 
 
 name = "MainState"
 ui = None
-character = None
+player = None
 
 def enter():
-    global ui, character
+    global ui, player
     ui = UI()
-    character = Character()
+    player = Player()
     
 
 def exit():
@@ -36,19 +36,19 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         else:
-            character.handle_event(event)
+            player.handle_event(event)
     pass
 
 
 def update():
     ui.update()
-    character.update()
+    player.update()
 
 
 def draw():
     clear_canvas()
     ui.draw()
-    character.draw()
+    player.draw()
     update_canvas()
     
     

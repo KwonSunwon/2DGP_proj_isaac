@@ -1,6 +1,6 @@
 from pico2d import *
 
-import character
+import Player
 # import stage
 
 UI_SIZE = 64
