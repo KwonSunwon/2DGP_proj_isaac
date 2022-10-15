@@ -4,17 +4,20 @@ import game_world
 
 from ui import UI
 from Player import Player
+from stage import Stage
+from stage import Room
 
 
 name = "MainState"
 ui = None
 player = None
+stage = None
 
 def enter():
-    global ui, player
+    global ui, player, stage
     ui = UI()
     player = Player()
-    
+    stage = Stage()
 
 def exit():
     pass
