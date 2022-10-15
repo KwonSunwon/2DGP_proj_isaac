@@ -2,6 +2,7 @@ from posixpath import isabs
 from tkinter import Frame
 from turtle import back
 from pico2d import *
+import game_framework
 
 from math import pi
 
@@ -13,9 +14,14 @@ IMAGE_SIZE = 96
 IDLE = 0
 FRONT, BACK, LEFT, RIGHT = 0b0001, 0b0010, 0b0100, 0b1000
 
+# character image resource info
 MOVE_CLIP_POS = [[0, 448], [32, 448], [64, 448], [96, 448], [128, 448], [160, 448], [192, 448], [224, 448], [192, 480], [224, 480]]
 MOVE_SIDE_CLIP_POS = [[0, 416], [32, 416], [64, 416], [96, 416], [128, 416], [160, 416], [192, 416], [224, 416], [0, 384], [32, 384]]
 HEAD_GAP = 29 
+
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAME_PER_ACTION = 10
 
 class Character:
     image = None
@@ -33,6 +39,7 @@ class Character:
         self.y = 408
         self.max_hp = 6
         self.cur_hp = 6
+        self.speed = 300
 
     def add_event(self, event):
         pass
@@ -43,17 +50,34 @@ class Character:
         elif self.directionMove & LEFT:
             if self.directionMove & FRONT:
                 self.lookBody = FRONT
+                self.x -= self.speed // 1.5 * game_framework.frame_time
+                self.y -= self.speed // 1.5 * game_framework.frame_time
             elif self.directionMove & BACK:
                 self.lookBody = BACK
+                self.x -= self.speed // 1.5 * game_framework.frame_time
+                self.y += self.speed // 1.5 * game_framework.frame_time
             else:
                 self.lookBody = LEFT
+                self.x -= self.speed * game_framework.frame_time
+                
         elif self.directionMove & RIGHT:
             if self.directionMove & FRONT:
                 self.lookBody = FRONT
+                self.x += self.speed // 1.5 * game_framework.frame_time
+                self.y -= self.speed // 1.5 * game_framework.frame_time
             elif self.directionMove & BACK:
                 self.lookBody = BACK
+                self.x += self.speed // 1.5 * game_framework.frame_time
+                self.y += self.speed // 1.5 * game_framework.frame_time
             else:
                 self.lookBody = RIGHT
+                self.x += self.speed * game_framework.frame_time
+        elif self.directionMove & FRONT:
+            self.lookBody = FRONT
+            self.y -= self.speed * game_framework.frame_time
+        elif self.directionMove & BACK:
+            self.lookBody = BACK
+            self.y += self.speed * game_framework.frame_time
         
         if self.directionAttack == IDLE:
             self.lookHead = self.lookBody
@@ -67,7 +91,7 @@ class Character:
             elif self.directionAttack & BACK:
                 self.lookHead = BACK
         
-        self.frame = (self.frame + 1) % 10
+        self.frame = (self.frame + FRAME_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
 
     ### Draw Functions ###
     def draw_head(self):
@@ -93,11 +117,11 @@ class Character:
         if self.directionMove == IDLE:
             self.image.clip_composite_draw(MOVE_CLIP_POS[0][X], MOVE_CLIP_POS[0][Y], CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y, IMAGE_SIZE, IMAGE_SIZE)
         elif self.lookBody == FRONT or self.lookBody == BACK:
-            self.image.clip_composite_draw(MOVE_CLIP_POS[self.frame][X], MOVE_CLIP_POS[self.frame][Y], CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y, IMAGE_SIZE, IMAGE_SIZE)
+            self.image.clip_composite_draw(MOVE_CLIP_POS[int(self.frame)][X], MOVE_CLIP_POS[int(self.frame)][Y], CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y, IMAGE_SIZE, IMAGE_SIZE)
         elif self.lookBody == LEFT:
-            self.image.clip_composite_draw(MOVE_SIDE_CLIP_POS[self.frame][X], MOVE_SIDE_CLIP_POS[self.frame][Y], CLIP_SIZE, CLIP_SIZE, pi, 'v', self.x, self.y, IMAGE_SIZE, IMAGE_SIZE)
+            self.image.clip_composite_draw(MOVE_SIDE_CLIP_POS[int(self.frame)][X], MOVE_SIDE_CLIP_POS[int(self.frame)][Y], CLIP_SIZE, CLIP_SIZE, pi, 'v', self.x, self.y, IMAGE_SIZE, IMAGE_SIZE)
         elif self.lookBody == RIGHT:
-            self.image.clip_composite_draw(MOVE_SIDE_CLIP_POS[self.frame][X], MOVE_SIDE_CLIP_POS[self.frame][Y], CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y, IMAGE_SIZE, IMAGE_SIZE)
+            self.image.clip_composite_draw(MOVE_SIDE_CLIP_POS[int(self.frame)][X], MOVE_SIDE_CLIP_POS[int(self.frame)][Y], CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y, IMAGE_SIZE, IMAGE_SIZE)
     ######################
     
     def draw(self):
