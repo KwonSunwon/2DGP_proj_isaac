@@ -14,9 +14,10 @@ stage = None
 
 def enter():
     global ui, player, stage
-    ui = UI()
     player = Player()
     stage = Stage()
+    ui = UI()
+
     
     stage.set_stage()
 
@@ -45,7 +46,11 @@ def handle_events():
 
 
 def update():
-    ui.update()
+    heart = player.get_player_heart()
+    key = player.get_player_key()
+    stage_state = stage.get_stage()
+    ui.update(heart, key, stage_state)
+    
     player.update()
 
 

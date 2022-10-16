@@ -43,6 +43,8 @@ class Player:
         self.max_hp = 6
         self.cur_hp = 6
         
+        self.key = 0
+        
         self.shootSpeed = 10
         self.shootCoolTime = 0
         self.shootFrame = 0
@@ -200,3 +202,9 @@ class Player:
                 case pico2d.SDLK_s:
                     self.directionMove &= ~FRONT
                     return
+    
+    def get_player_heart(self):
+        return [self.max_hp, self.cur_hp]
+    
+    def get_player_key(self):
+        return self.key

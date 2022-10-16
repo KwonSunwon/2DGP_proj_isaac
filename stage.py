@@ -7,7 +7,9 @@ import Player
 width = 1440
 height = 864
 
-OPEN, CLOSE = 1, 2
+
+OPEN, CLOSE, LOCK = 1, 2, 3
+
 NORTH, SOUTH, EAST, WEST = range(4)
 
 BASEMENT, CAVES = 0, 1
@@ -15,9 +17,7 @@ WALL = 20
 DOOR_NORMAL = 21
 DOOR_TREASURE = 22
 DOOR_BOSS = 23
-DOOR_NORMAL_OPEN = 31
-DOOR_TREASURE_OPEN = 32
-DOOR_BOSS_OPEN = 33
+
 
 DOOR_TRAP = 24
 
@@ -30,8 +30,8 @@ room_type_01 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WA
                 [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
                 [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
                 [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
-                [WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_TREASURE, WALL, WALL,WALL, WALL, WALL, WALL, WALL]
-                ]
+                [WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_TREASURE, WALL, WALL,WALL, WALL, WALL, WALL, WALL]]
+
 
 class Room:
     room_background_image = [None, None]
@@ -140,3 +140,6 @@ class Stage:
     def set_stage(self):
         self.stage[4][4] = Room()
         self.stage[4][4].set_room(room_type_01)
+        
+    def get_stage(self):
+        return self.stage
