@@ -17,10 +17,6 @@ def enter():
     player = Player()
     stage = Stage()
     ui = UI()
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     
     stage.set_stage()
 
