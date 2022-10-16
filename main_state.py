@@ -11,9 +11,16 @@ ui = None
 player = None
 
 def enter():
+<<<<<<< Updated upstream
     global ui, player
     ui = UI()
     player = Player()
+=======
+    global ui, player, stage
+    player = Player()
+    stage = Stage()
+    ui = UI()
+>>>>>>> Stashed changes
     
 
 def exit():
@@ -41,7 +48,11 @@ def handle_events():
 
 
 def update():
-    ui.update()
+    heart = player.get_player_heart()
+    key = player.get_player_key()
+    stage_state = stage.get_stage()
+    ui.update(heart, key, stage_state)
+    
     player.update()
 
 

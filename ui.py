@@ -7,8 +7,8 @@ UI_SIZE = 64
 UI_FONT_SIZE = 50
 
 ### test code ##############################
-heart = {'max': 6, 'cur': 3}
-keyCount = 3
+# heart = {'max': 6, 'cur': 3}
+# keyCount = 3
 START_ROOM = 0b00000001
 stage = [[None] * 10 for i in range(10)]
 stage[4][4] = START_ROOM
@@ -39,20 +39,22 @@ class UI:
         if (UI.font == None):
             self.font = load_font('./resources/DungGeunMo.ttf', UI_FONT_SIZE)
         
-        self.heartState = heart # get heart information from character class
-        self.keyState = keyCount # get key information from character class
-        self.stage = stage # get stage information from stage class
+        self.heartState = None # get heart information from character class
+        self.keyState = None # get key information from character class
+        self.stage = None # get stage information from stage class
         
     def add_event(self, event):
         pass
     
-    def update(self):
-        pass
+    def update(self, heartState, keyCount, stage):
+        self.heartState = heartState # get heart information from character class
+        self.keyState = keyCount # get key information from character class
+        self.stage = stage # get stage information from stage class
     
     def draw_hearts(self):
-        full = self.heartState['cur'] // 2
-        half = self.heartState['cur'] % 2
-        empty = self.heartState['max'] // 2 - full - half
+        full = self.heartState[1] // 2
+        half = self.heartState[1] % 2
+        empty = self.heartState[0] // 2 - full - half
         pos = 0
         for i in range(full):
             self.hearts.clip_composite_draw(0, 48, 16, 16, 0, '', 50 + pos * UI_SIZE, height - 50, UI_SIZE, UI_SIZE)
