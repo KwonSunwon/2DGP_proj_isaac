@@ -7,7 +7,9 @@ import Player
 width = 1440
 height = 864
 
+
 OPEN, CLOSE, LOCK = 1, 2, 3
+
 NORTH, SOUTH, EAST, WEST = range(4)
 
 BASEMENT, CAVES = 0, 1
@@ -15,6 +17,7 @@ WALL = 20
 DOOR_NORMAL = 21
 DOOR_TREASURE = 22
 DOOR_BOSS = 23
+
 
 DOOR_TRAP = 24
 
@@ -28,6 +31,7 @@ room_type_01 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WA
                 [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
                 [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
                 [WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_TREASURE, WALL, WALL,WALL, WALL, WALL, WALL, WALL]]
+
 
 class Room:
     room_background_image = [None, None]
@@ -84,6 +88,7 @@ class Room:
             door.clip_composite_draw(0, 144, 64, 48, pi, 'h', 7 * 96 + 48, 96, 192, 128)
             door.clip_composite_draw(64, 144, 64, 48, pi, 'h', 7 * 96 + 48, 96, 192, 128)
             door.clip_composite_draw(0, 192, 64, 48, pi, 'h', 7 * 96 + 48, 96, 192, 128)
+
             
     def draw_grid(self):
         self.room_background_image[self.background].draw(width / 2, height / 2, 1440, 864)
