@@ -5,7 +5,6 @@ import game_world
 from ui import UI
 from Player import Player
 from stage import Stage
-from stage import Room
 
 
 name = "MainState"
@@ -18,6 +17,8 @@ def enter():
     ui = UI()
     player = Player()
     stage = Stage()
+    
+    stage.set_stage()
 
 def exit():
     pass
@@ -50,6 +51,7 @@ def update():
 
 def draw():
     clear_canvas()
+    stage.draw()
     ui.draw()
     player.draw()
     update_canvas()
@@ -57,7 +59,7 @@ def draw():
     
 def test_self():
     import sys
-    pico2d.open_canvas(1440, 816)
+    pico2d.open_canvas(1440, 864)
     game_framework.run(sys.modules[__name__])
     pico2d.close_canvas()
     
