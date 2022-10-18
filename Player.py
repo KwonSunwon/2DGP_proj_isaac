@@ -87,6 +87,9 @@ class Player:
             self.lookBody = BACK
             self.y += self.speed * game_framework.frame_time
         
+        self.x = clamp(144 + 32, self.x, 1440 - 144 - 32)
+        self.y = clamp(144 + 32, self.y, 864 - 144)
+        
         self.frame = (self.frame + FRAME_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
         
         if self.directionAttack == IDLE:
