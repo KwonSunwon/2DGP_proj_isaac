@@ -1,7 +1,5 @@
-from posixpath import isabs
-from tkinter import Frame
-from turtle import back
 from pico2d import *
+from creature import Creature
 import game_framework
 
 from math import pi
@@ -23,9 +21,9 @@ TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAME_PER_ACTION = 10
 
-class Player:
+class Player(Creature):
     image = None
-
+    
     def __init__(self):
         if Player.image == None:
             self.image = load_image('./resources/character.png')
@@ -41,7 +39,7 @@ class Player:
         self.speed = 300
         
         self.max_hp = 6
-        self.cur_hp = 6
+        self.hp = 6
         
         self.key = 0
         
@@ -207,7 +205,7 @@ class Player:
                     return
     
     def get_player_heart(self):
-        return [self.max_hp, self.cur_hp]
+        return [self.max_hp, self.hp]
     
     def get_player_key(self):
         return self.key

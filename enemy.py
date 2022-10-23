@@ -1,7 +1,8 @@
 from pico2d import *
+from creature import Creature
 
 
-class Enemy:
+class Enemy(Creature):
     def __init__(self):
 
         pass
