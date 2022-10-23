@@ -1,7 +1,12 @@
 
-# layer 0: Background Objects
-# layer 1: Foreground Objects
-objects = [[],[]]
+# layer 0: background(stage)
+# layer 1: objects(room objects, item)
+# layer 2: creature(player, enemy)
+# layer 3: flying creature(enemy)
+# layer 4: effects
+# layer 5: ui
+
+objects = [[], [], [], [], [], []]
 
 
 def add_object(o, layer):
@@ -20,13 +25,12 @@ def remove_object(o):
             break
 
 
-
-
 def clear():
     for o in all_objects():
         del o
     for l in objects:
         l.clear()
+
 
 def destroy():
     clear()
