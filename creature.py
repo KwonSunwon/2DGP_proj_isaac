@@ -26,3 +26,6 @@ class Creature:
     def handle_event(self, event):
         pass
 
+    def get_bb(self):
+        return self.x - self.width // 2, self.y - self.height // 2, self.x + self.width // 2, self.y + self.height // 2
+    
