@@ -36,6 +36,9 @@ class Player(Creature):
         
         self.x = 720
         self.y = 408
+        self.height = 96
+        self.width = 96
+        
         self.speed = 300
         
         self.max_hp = 6
