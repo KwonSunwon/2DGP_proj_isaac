@@ -54,96 +54,16 @@ class Player(Creature):
         pass
 
     def update(self):
-        if self.directionMove == IDLE:
-            self.lookBody = FRONT
-        elif self.directionMove & LEFT:
-            if self.directionMove & FRONT:
-                self.lookBody = FRONT
-                self.x -= self.speed // 1.5 * game_framework.frame_time
-                self.y -= self.speed // 1.5 * game_framework.frame_time
-            elif self.directionMove & BACK:
-                self.lookBody = BACK
-                self.x -= self.speed // 1.5 * game_framework.frame_time
-                self.y += self.speed // 1.5 * game_framework.frame_time
-            else:
-                self.lookBody = LEFT
-                self.x -= self.speed * game_framework.frame_time
-                
-        elif self.directionMove & RIGHT:
-            if self.directionMove & FRONT:
-                self.lookBody = FRONT
-                self.x += self.speed // 1.5 * game_framework.frame_time
-                self.y -= self.speed // 1.5 * game_framework.frame_time
-            elif self.directionMove & BACK:
-                self.lookBody = BACK
-                self.x += self.speed // 1.5 * game_framework.frame_time
-                self.y += self.speed // 1.5 * game_framework.frame_time
-            else:
-                self.lookBody = RIGHT
-                self.x += self.speed * game_framework.frame_time
-        elif self.directionMove & FRONT:
-            self.lookBody = FRONT
-            self.y -= self.speed * game_framework.frame_time
-        elif self.directionMove & BACK:
-            self.lookBody = BACK
-            self.y += self.speed * game_framework.frame_time
-        
-        self.x = clamp(144 + 32, self.x, 1440 - 144 - 32)
-        self.y = clamp(144 + 32, self.y, 864 - 144)
-        
-        self.frame = (self.frame + FRAME_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
-        
-        if self.directionAttack == IDLE:
-            self.lookHead = self.lookBody
-        else:
-            if self.directionAttack & LEFT:
-                self.lookHead = LEFT
-            elif self.directionAttack & RIGHT:
-                self.lookHead = RIGHT
-            elif self.directionAttack & FRONT:
-                self.lookHead = FRONT
-            elif self.directionAttack & BACK:
-                self.lookHead = BACK
-            
-            # print("shootCoolTime : ", self.shootCoolTime)
-            if self.shootCoolTime <= 0:
-                # print("shoot")
-                self.shootCoolTime = self.shootSpeed * 50
-                self.shootFrame = 100
-            
-        if self.shootCoolTime > 0:
-                # print("game_framework.frame_time : ", int(game_framework.frame_time * 1000))
-                self.shootCoolTime -= 1
-        if self.shootFrame > 0:
-            self.shootFrame -= 1
-        
+        ### Move body ###
+        self.move_body()
+        ### Move head ###
+        self.move_head()
+    
         # print("shootFrame : ", self.shootFrame)
         
         # self.shootFrame = (self.shootFrame + (FRAME_PER_ACTION * self.shootSpeed)* ACTION_PER_TIME * game_framework.frame_time) % 200
         # if self.directionAttack == IDLE:
             # self.shootFrame = 0
-
-    ### Draw Functions ###
-    def draw_head(self):
-        if self.lookHead == FRONT:
-            self.image.clip_composite_draw(0 + (clamp(0, int(self.shootFrame), 1) * 32), 480, CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
-        elif self.lookHead == BACK:
-            self.image.clip_composite_draw(128 + (clamp(0, int(self.shootFrame), 1) * 32), 480, CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
-        elif self.lookHead == LEFT:
-            self.image.clip_composite_draw(64 + (clamp(0, int(self.shootFrame), 1) * 32), 480, CLIP_SIZE, CLIP_SIZE, pi, 'v', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
-        elif self.lookHead == RIGHT:
-            self.image.clip_composite_draw(64 + (clamp(0, int(self.shootFrame), 1) * 32), 480, CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
-    
-    def draw_body(self):
-        if self.directionMove == IDLE:
-            self.image.clip_composite_draw(MOVE_CLIP_POS[0][X], MOVE_CLIP_POS[0][Y], CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y, IMAGE_SIZE, IMAGE_SIZE)
-        elif self.lookBody == FRONT or self.lookBody == BACK:
-            self.image.clip_composite_draw(MOVE_CLIP_POS[int(self.frame)][X], MOVE_CLIP_POS[int(self.frame)][Y], CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y, IMAGE_SIZE, IMAGE_SIZE)
-        elif self.lookBody == LEFT:
-            self.image.clip_composite_draw(MOVE_SIDE_CLIP_POS[int(self.frame)][X], MOVE_SIDE_CLIP_POS[int(self.frame)][Y], CLIP_SIZE, CLIP_SIZE, pi, 'v', self.x, self.y, IMAGE_SIZE, IMAGE_SIZE)
-        elif self.lookBody == RIGHT:
-            self.image.clip_composite_draw(MOVE_SIDE_CLIP_POS[int(self.frame)][X], MOVE_SIDE_CLIP_POS[int(self.frame)][Y], CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y, IMAGE_SIZE, IMAGE_SIZE)
-    ######################
     
     def draw(self):
         self.draw_body()
@@ -212,3 +132,95 @@ class Player(Creature):
     
     def get_player_key(self):
         return self.key
+    
+    ### Player extra functions ###
+    
+    ### Draw Functions ###
+    def draw_head(self):
+        if self.lookHead == FRONT:
+            self.image.clip_composite_draw(0 + (clamp(0, int(self.shootFrame), 1) * 32), 480, CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
+        elif self.lookHead == BACK:
+            self.image.clip_composite_draw(128 + (clamp(0, int(self.shootFrame), 1) * 32), 480, CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
+        elif self.lookHead == LEFT:
+            self.image.clip_composite_draw(64 + (clamp(0, int(self.shootFrame), 1) * 32), 480, CLIP_SIZE, CLIP_SIZE, pi, 'v', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
+        elif self.lookHead == RIGHT:
+            self.image.clip_composite_draw(64 + (clamp(0, int(self.shootFrame), 1) * 32), 480, CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y + HEAD_GAP, IMAGE_SIZE, IMAGE_SIZE)
+    
+    def draw_body(self):
+        if self.directionMove == IDLE:
+            self.image.clip_composite_draw(MOVE_CLIP_POS[0][X], MOVE_CLIP_POS[0][Y], CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y, IMAGE_SIZE, IMAGE_SIZE)
+        elif self.lookBody == FRONT or self.lookBody == BACK:
+            self.image.clip_composite_draw(MOVE_CLIP_POS[int(self.frame)][X], MOVE_CLIP_POS[int(self.frame)][Y], CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y, IMAGE_SIZE, IMAGE_SIZE)
+        elif self.lookBody == LEFT:
+            self.image.clip_composite_draw(MOVE_SIDE_CLIP_POS[int(self.frame)][X], MOVE_SIDE_CLIP_POS[int(self.frame)][Y], CLIP_SIZE, CLIP_SIZE, pi, 'v', self.x, self.y, IMAGE_SIZE, IMAGE_SIZE)
+        elif self.lookBody == RIGHT:
+            self.image.clip_composite_draw(MOVE_SIDE_CLIP_POS[int(self.frame)][X], MOVE_SIDE_CLIP_POS[int(self.frame)][Y], CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y, IMAGE_SIZE, IMAGE_SIZE)
+    ######################
+    
+    ### Player Move Functions ###
+    def update_head(self):
+        if self.directionMove == IDLE:
+            self.lookBody = FRONT
+        elif self.directionMove & LEFT:
+            if self.directionMove & FRONT:
+                self.lookBody = FRONT
+                self.x -= self.speed // 1.5 * game_framework.frame_time
+                self.y -= self.speed // 1.5 * game_framework.frame_time
+            elif self.directionMove & BACK:
+                self.lookBody = BACK
+                self.x -= self.speed // 1.5 * game_framework.frame_time
+                self.y += self.speed // 1.5 * game_framework.frame_time
+            else:
+                self.lookBody = LEFT
+                self.x -= self.speed * game_framework.frame_time
+                
+        elif self.directionMove & RIGHT:
+            if self.directionMove & FRONT:
+                self.lookBody = FRONT
+                self.x += self.speed // 1.5 * game_framework.frame_time
+                self.y -= self.speed // 1.5 * game_framework.frame_time
+            elif self.directionMove & BACK:
+                self.lookBody = BACK
+                self.x += self.speed // 1.5 * game_framework.frame_time
+                self.y += self.speed // 1.5 * game_framework.frame_time
+            else:
+                self.lookBody = RIGHT
+                self.x += self.speed * game_framework.frame_time
+        elif self.directionMove & FRONT:
+            self.lookBody = FRONT
+            self.y -= self.speed * game_framework.frame_time
+        elif self.directionMove & BACK:
+            self.lookBody = BACK
+            self.y += self.speed * game_framework.frame_time
+        
+        self.x = clamp(144 + 32, self.x, 1440 - 144 - 32)
+        self.y = clamp(144 + 32, self.y, 864 - 144)
+        
+        self.frame = (self.frame + FRAME_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
+        pass
+    
+    def update_body(self):
+        if self.directionAttack == IDLE:
+            self.lookHead = self.lookBody
+        else:
+            if self.directionAttack & LEFT:
+                self.lookHead = LEFT
+            elif self.directionAttack & RIGHT:
+                self.lookHead = RIGHT
+            elif self.directionAttack & FRONT:
+                self.lookHead = FRONT
+            elif self.directionAttack & BACK:
+                self.lookHead = BACK
+            
+            # print("shootCoolTime : ", self.shootCoolTime)
+            if self.shootCoolTime <= 0:
+                # print("shoot")
+                self.shootCoolTime = self.shootSpeed * 50
+                self.shootFrame = 100
+            
+        if self.shootCoolTime > 0:
+                # print("game_framework.frame_time : ", int(game_framework.frame_time * 1000))
+                self.shootCoolTime -= 1
+        if self.shootFrame > 0:
+            self.shootFrame -= 1
+        pass
