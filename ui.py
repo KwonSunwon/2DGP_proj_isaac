@@ -46,10 +46,13 @@ class UI:
     def add_event(self, event):
         pass
     
-    def update(self, heartState, keyCount, stage):
-        self.heartState = heartState # get heart information from character class
-        self.keyState = keyCount # get key information from character class
-        self.stage = stage # get stage information from stage class
+    def set_state(self, player, stage):
+        self.heartState = player.get_heart() # get heart information from character class
+        self.keyState = player.get_key() # get key information from character class
+        self.stage = stage.get_stage() # get stage information from stage class
+    
+    def update(self):
+        pass
     
     def draw_hearts(self):
         full = self.heartState[1] // 2

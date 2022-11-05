@@ -141,5 +141,11 @@ class Stage:
         self.stage[4][4] = Room()
         self.stage[4][4].set_room(room_type_01)
         
+
+    def get_state(self):
+        return self.get_stage()
+
     def get_stage(self):
         return self.stage
+    
+    

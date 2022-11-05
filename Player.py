@@ -204,8 +204,11 @@ class Player(Creature):
                     self.directionMove &= ~FRONT
                     return
     
-    def get_player_heart(self):
+    # def get_state(self):
+    #     return self.get_player_heart(), self.get_player_key()
+    
+    def get_heart(self):
         return [self.max_hp, self.hp]
     
-    def get_player_key(self):
+    def get_key(self):
         return self.key

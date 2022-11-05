@@ -50,15 +50,12 @@ def handle_events():
 
 
 def update():
-    # TODO: UI 업데이트 전달할 변수 방법 변경
-    heart = player.get_player_heart()
-    key = player.get_player_key()
-    stage_state = stage.get_stage()
-    ui.update(heart, key, stage_state)
+    global ui
+    # UI로 상태 전달
+    ui.set_state(player, stage)
     
-    # for game_objects in game_world.all_objects():
-    #     game_objects.update()
-    player.update()
+    for game_objects in game_world.all_objects():
+        game_objects.update()
 
 
 def draw():
