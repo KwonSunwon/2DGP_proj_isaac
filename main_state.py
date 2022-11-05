@@ -16,9 +16,13 @@ def enter():
     global ui, player, stage
     player = Player()
     stage = Stage()
+    stage.set_stage()
     ui = UI()
     
-    stage.set_stage()
+    game_world.add_object(stage, 0)
+    game_world.add_object(player, 2)
+    game_world.add_object(ui, 5)
+    
 
 def exit():
     pass
@@ -55,9 +59,11 @@ def update():
 
 def draw():
     clear_canvas()
-    stage.draw()
-    ui.draw()
-    player.draw()
+    # stage.draw()
+    # ui.draw()
+    # player.draw()
+    for game_objects in game_world.all_objects():
+        game_objects.draw()
     update_canvas()
     
     
