@@ -25,6 +25,7 @@ def enter():
     
 
 def exit():
+    game_world.clear()
     pass
 
 
@@ -49,11 +50,14 @@ def handle_events():
 
 
 def update():
+    # TODO: UI 업데이트 전달할 변수 방법 변경
     heart = player.get_player_heart()
     key = player.get_player_key()
     stage_state = stage.get_stage()
     ui.update(heart, key, stage_state)
     
+    # for game_objects in game_world.all_objects():
+    #     game_objects.update()
     player.update()
 
 
