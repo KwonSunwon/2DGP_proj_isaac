@@ -56,6 +56,11 @@ def update():
     
     for game_objects in game_world.all_objects():
         game_objects.update()
+    
+    for a, b, group in game_world.all_collision_pairs():
+        if collide(a, b):
+            a.handle_collision(b, group)
+            b.handle_collision(a, group)
 
 
 def draw():
@@ -66,6 +71,18 @@ def draw():
     for game_objects in game_world.all_objects():
         game_objects.draw()
     update_canvas()
+    
+    
+def collide(a, b):
+    left_a, bottom_a, right_a, top_a = a.get_bb()
+    left_b, bottom_b, right_b, top_b = b.get_bb()
+
+    if left_a > right_b: return False
+    if right_a < left_b: return False
+    if top_a < bottom_b: return False
+    if bottom_a > top_b: return False
+
+    return True
     
     
 def test_self():

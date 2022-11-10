@@ -29,3 +29,5 @@ class Creature:
     def get_bb(self):
         return self.x - self.width // 2, self.y - self.height // 2, self.x + self.width // 2, self.y + self.height // 2
     
+    def handle_collision(self, other, group):
+        pass

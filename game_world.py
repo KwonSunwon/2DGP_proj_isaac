@@ -7,7 +7,7 @@
 # layer 5: ui
 
 objects = [[], [], [], [], [], []]
-
+collision_group = dict()
 
 def add_object(o, layer):
     objects[layer].append(o)
@@ -42,3 +42,36 @@ def all_objects():
         for o in objects[i]:
             yield o
 
+
+def add_collision_group(a, b, group):
+    if group not in collision_group:
+        collision_group[group] = [[],[]]
+
+    if a:
+        if type(a) == list:
+            collision_group[group] += a
+        else:
+            collision_group[group].append(a)
+            
+    if b:
+        if type(b) == list:
+            collision_group[group] += b
+        else:
+            collision_group[group].append(b)
+            
+
+def all_collision_pairs():
+    for group, pairs in collision_group.items():
+        for a in pairs[0]:
+            for b in pairs[1]:
+                yield a, b, group
+
+
+def remove_collision_group(o):
+    for pairs in collision_group.values():
+        if o in pairs[0]:
+            pairs[0].remove(o)
+        elif o in pairs[1]:
+            pairs[1].remove(o)
+            
+            
