@@ -3,7 +3,7 @@ import game_framework
 import game_world
 
 from ui import UI
-from Player import Player
+from player import Player
 from stage import Stage
 
 

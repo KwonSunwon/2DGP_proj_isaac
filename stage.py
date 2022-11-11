@@ -2,7 +2,7 @@ from cmath import pi
 from logging import root
 from pico2d import *
 
-import Player
+import player
 
 width = 1440
 height = 864

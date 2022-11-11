@@ -28,12 +28,15 @@ class Static:
         pass
     
 
+class Wall(Static):
+    pass
+
 class Rock(Static):
     image = None
     
     def __init__(self):
-        if self.image == None:
-            self.image = pico2d.load_image('resource\\image\\rock.png')
+        if Rock.image == None:
+            Rock.image = pico2d.load_image('resource\\image\\rock.png')
         
     pass
 
@@ -42,8 +45,8 @@ class Spike(Static):
     image = None
     
     def __init__(self):
-        if self.image == None:
-            self.image = pico2d.load_image('resource\\image\\spike.png')
+        if Spike.image == None:
+            Spike.image = pico2d.load_image('resource\\image\\spike.png')
     pass
 
 
@@ -51,8 +54,8 @@ class Poop(Static):
     image = None
     
     def __init__(self):
-        if self.image == None:
-            self.image = pico2d.load_image('resource\\image\\spike.png')
+        if Poop.image == None:
+            Poop.image = pico2d.load_image('resource\\image\\spike.png')
     pass
 
 
@@ -61,8 +64,8 @@ class Door(Static):
     
     
     def __init__(self):
-        if self.image == None:
-            self.image = pico2d.load_image('resource\\image\\spike.png')
+        if Door.image == None:
+            Door.image = pico2d.load_image('resource\\image\\spike.png')
     pass
 
 
@@ -70,6 +73,6 @@ class Pit(Static):
     image = None
     
     def __init__(self):
-        if self.image == None:
-            self.image = pico2d.load_image('resource\\image\\spike.png')
+        if Pit.image == None:
+            Pit.image = pico2d.load_image('resource\\image\\spike.png')
     pass
