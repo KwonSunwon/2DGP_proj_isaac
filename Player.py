@@ -63,9 +63,9 @@ class Player(Creature):
 
     def update(self):
         ### Move body ###
-        self.move_body()
+        self.update_body()
         ### Move head ###
-        self.move_head()
+        self.update_head()
     
         # print("shootFrame : ", self.shootFrame)
         
@@ -136,24 +136,15 @@ class Player(Creature):
                     self.directionMove &= ~FRONT
                     return
     
-<<<<<<< Updated upstream
     # def get_state(self):
     #     return self.get_player_heart(), self.get_player_key()
     
     def get_heart(self):
-=======
-    
-    ### Player extra functions ###
-    
-    ### getter ###
-    def get_player_heart(self):
->>>>>>> Stashed changes
         return [self.max_hp, self.hp]
     
     def get_key(self):
         return self.key
     
-<<<<<<< Updated upstream
     def get_bb(self):
         return self.x - 20, self.y - 24, self.x + 20, self.y + 12
     
@@ -165,8 +156,6 @@ class Player(Creature):
     
     ### Player extra functions ###
     
-=======
->>>>>>> Stashed changes
     ### Draw Functions ###
     def draw_head(self):
         if self.lookHead == FRONT:
@@ -191,6 +180,8 @@ class Player(Creature):
     
     ### Player Update Functions ###
     def update_body(self):
+        self.prevX, self.prevY = self.x, self.y
+        
         if self.directionMove == IDLE:
             self.lookBody = FRONT
         elif self.directionMove & LEFT:
@@ -225,8 +216,8 @@ class Player(Creature):
             self.lookBody = BACK
             self.y += self.speed * game_framework.frame_time
         
-        self.x = clamp(144 + 32, self.x, 1440 - 144 - 32)
-        self.y = clamp(144 + 32, self.y, 864 - 144)
+        # self.x = clamp(144 + 32, self.x, 1440 - 144 - 32)
+        # self.y = clamp(144 + 32, self.y, 864 - 144)
         
         self.frame = (self.frame + FRAME_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
         pass
@@ -247,7 +238,9 @@ class Player(Creature):
             # print("shootCoolTime : ", self.shootCoolTime)
             if self.shootCoolTime <= 0:
                 # print("shoot")
-                # shoot()
+                tear = Tear(self.x, self.y, self.lookHead)
+                game_world.add_object(tear, 1)
+                game_world.add_collision_group(None, tear, 'room:tears')
                 self.shootCoolTime = self.shootSpeed * 50
                 self.shootFrame = 100
             

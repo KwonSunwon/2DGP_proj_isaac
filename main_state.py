@@ -24,6 +24,8 @@ def enter():
     game_world.add_object(ui, 5)
 
     game_world.add_collision_group(player, game_world.objects[1], 'player:room')
+    game_world.add_collision_group(game_world.objects[1], None, 'room:tears')
+    
 
 def exit():
     game_world.clear()
