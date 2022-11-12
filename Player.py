@@ -136,15 +136,24 @@ class Player(Creature):
                     self.directionMove &= ~FRONT
                     return
     
+<<<<<<< Updated upstream
     # def get_state(self):
     #     return self.get_player_heart(), self.get_player_key()
     
     def get_heart(self):
+=======
+    
+    ### Player extra functions ###
+    
+    ### getter ###
+    def get_player_heart(self):
+>>>>>>> Stashed changes
         return [self.max_hp, self.hp]
     
     def get_key(self):
         return self.key
     
+<<<<<<< Updated upstream
     def get_bb(self):
         return self.x - 20, self.y - 24, self.x + 20, self.y + 12
     
@@ -156,6 +165,8 @@ class Player(Creature):
     
     ### Player extra functions ###
     
+=======
+>>>>>>> Stashed changes
     ### Draw Functions ###
     def draw_head(self):
         if self.lookHead == FRONT:
@@ -178,8 +189,8 @@ class Player(Creature):
             self.image.clip_composite_draw(MOVE_SIDE_CLIP_POS[int(self.frame)][X], MOVE_SIDE_CLIP_POS[int(self.frame)][Y], CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y, IMAGE_SIZE, IMAGE_SIZE)
     ######################
     
-    ### Player Move Functions ###
-    def update_head(self):
+    ### Player Update Functions ###
+    def update_body(self):
         if self.directionMove == IDLE:
             self.lookBody = FRONT
         elif self.directionMove & LEFT:
@@ -220,7 +231,7 @@ class Player(Creature):
         self.frame = (self.frame + FRAME_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
         pass
     
-    def update_body(self):
+    def update_head(self):
         if self.directionAttack == IDLE:
             self.lookHead = self.lookBody
         else:
@@ -236,6 +247,7 @@ class Player(Creature):
             # print("shootCoolTime : ", self.shootCoolTime)
             if self.shootCoolTime <= 0:
                 # print("shoot")
+                # shoot()
                 self.shootCoolTime = self.shootSpeed * 50
                 self.shootFrame = 100
             
@@ -245,3 +257,4 @@ class Player(Creature):
         if self.shootFrame > 0:
             self.shootFrame -= 1
         pass
+    ##############################
