@@ -112,4 +112,5 @@ class Stage:
     def get_stage(self):
         return self.stage
     
-    
+    def get_room_objects(self):
+        return self.stage[self.playerPos[0]][self.playerPos[1]].objects

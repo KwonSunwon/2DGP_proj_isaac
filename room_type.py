@@ -22,10 +22,10 @@ type_01 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WA
 
 type_02 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WALL, WALL, WALL, WALL, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
+            [WALL, None, ROCK, ROCK,JAR,JAR, None, None, None, None,None, ROCK, ROCK, None, WALL],
+            [WALL, None, ROCK, ROCK,JAR,JAR, None, None, None, None,None, ROCK, ROCK, None, WALL],
+            [DOOR_NORMAL, None, None, None, None, None, None, None, None, None,None, None, None, None, DOOR_BOSS],
             [WALL, None, ROCK, ROCK, None, None, None, None, None, None,None, ROCK, ROCK, None, WALL],
-            [WALL, None, ROCK, ROCK, None, None, JAR, JAR, JAR, None,None, ROCK, ROCK, None, WALL],
-            [DOOR_NORMAL, None, None, None, None, None, JAR, JAR, JAR, None,None, None, None, None, DOOR_BOSS],
-            [WALL, None, ROCK, ROCK, None, None, JAR, JAR, JAR, None,None, ROCK, ROCK, None, WALL],
             [WALL, None, ROCK, ROCK, None, None, None, None, None, None,None, ROCK, ROCK, None, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_TREASURE, WALL, WALL,WALL, WALL, WALL, WALL, WALL]]

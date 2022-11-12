@@ -2,6 +2,8 @@ import pico2d
 import game_framework
 import game_world
 
+FRONT, BACK, LEFT, RIGHT = 0b0001, 0b0010, 0b0100, 0b1000
+
 class Creature:
     x, y = 0, 0
     width, height = 0, 0

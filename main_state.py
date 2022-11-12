@@ -22,7 +22,8 @@ def enter():
     game_world.add_object(stage, 0)
     game_world.add_object(player, 2)
     game_world.add_object(ui, 5)
-    
+
+    game_world.add_collision_group(player, game_world.objects[1], 'player:room')
 
 def exit():
     game_world.clear()
@@ -59,6 +60,7 @@ def update():
     
     for a, b, group in game_world.all_collision_pairs():
         if collide(a, b):
+            # print('collide')
             a.handle_collision(b, group)
             b.handle_collision(a, group)
 

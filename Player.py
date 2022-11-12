@@ -1,8 +1,13 @@
 from pico2d import *
 from creature import Creature
 import game_framework
+import game_world
 
 from math import pi
+
+from tears import Tear
+
+import static
 
 MAX_HP = 24
 
@@ -34,6 +39,9 @@ class Player(Creature):
         self.directionAttack = IDLE
         self.frame = 0
         
+        self.prevX = 0
+        self.prevY = 0
+        
         self.x = 720
         self.y = 408
         self.speed = 300
@@ -43,7 +51,7 @@ class Player(Creature):
         
         self.key = 0
         
-        self.shootSpeed = 10
+        self.shootSpeed = 8
         self.shootCoolTime = 0
         self.shootFrame = 0
 
@@ -51,6 +59,7 @@ class Player(Creature):
         pass
 
     def update(self):
+        self.prevX, self.prevY = self.x, self.y
         if self.directionMove == IDLE:
             self.lookBody = FRONT
         elif self.directionMove & LEFT:
@@ -85,8 +94,8 @@ class Player(Creature):
             self.lookBody = BACK
             self.y += self.speed * game_framework.frame_time
         
-        self.x = clamp(144 + 32, self.x, 1440 - 144 - 32)
-        self.y = clamp(144 + 32, self.y, 864 - 144)
+        # self.x = clamp(144 + 32, self.x, 1440 - 144 - 32)
+        # self.y = clamp(144 + 32, self.y, 864 - 144)
         
         self.frame = (self.frame + FRAME_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
         
@@ -104,7 +113,8 @@ class Player(Creature):
             
             # print("shootCoolTime : ", self.shootCoolTime)
             if self.shootCoolTime <= 0:
-                # print("shoot")
+                tear = Tear(self.x, self.y, self.lookHead)
+                game_world.add_object(tear, 4)
                 self.shootCoolTime = self.shootSpeed * 50
                 self.shootFrame = 100
             
@@ -145,6 +155,7 @@ class Player(Creature):
     def draw(self):
         self.draw_body()
         self.draw_head()
+        draw_rectangle(*self.get_bb())
         
     def handle_event(self, event):
         if event.type == SDL_KEYDOWN:
@@ -212,3 +223,12 @@ class Player(Creature):
     
     def get_key(self):
         return self.key
+    
+    def get_bb(self):
+        return self.x - 20, self.y - 24, self.x + 20, self.y + 12
+    
+    def handle_collision(self, other, group):
+        if group == 'player:room':
+            # print(other.type)
+            if other.type == 'wall' or other.type == 'rock':
+                self.x, self.y = self.prevX, self.prevY

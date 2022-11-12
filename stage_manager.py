@@ -14,6 +14,5 @@ class StageManager:
         
         stage = Stage()
         
-        stage.make_stage()
         
         

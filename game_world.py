@@ -18,9 +18,10 @@ def add_objects(l, layer):
 
 
 def remove_object(o):
-    for i in range(len(objects)):
-        if o in objects[i]:
-            objects[i].remove(o)
+    for i in objects:
+        if o in i:
+            i.remove(o)
+            remove_collision_group(o)
             del o
             break
 
@@ -49,15 +50,15 @@ def add_collision_group(a, b, group):
 
     if a:
         if type(a) == list:
-            collision_group[group] += a
+            collision_group[group][0] += a
         else:
-            collision_group[group].append(a)
+            collision_group[group][0].append(a)
             
     if b:
         if type(b) == list:
-            collision_group[group] += b
+            collision_group[group][1] += b
         else:
-            collision_group[group].append(b)
+            collision_group[group][1].append(b)
             
 
 def all_collision_pairs():
