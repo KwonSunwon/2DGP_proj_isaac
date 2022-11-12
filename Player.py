@@ -1,8 +1,13 @@
 from pico2d import *
 from creature import Creature
 import game_framework
+import game_world
 
 from math import pi
+
+from tears import Tear
+
+import static
 
 MAX_HP = 24
 
@@ -34,6 +39,9 @@ class Player(Creature):
         self.directionAttack = IDLE
         self.frame = 0
         
+        self.prevX = 0
+        self.prevY = 0
+        
         self.x = 720
         self.y = 408
         self.height = 96
@@ -46,7 +54,7 @@ class Player(Creature):
         
         self.key = 0
         
-        self.shootSpeed = 10
+        self.shootSpeed = 8
         self.shootCoolTime = 0
         self.shootFrame = 0
 
@@ -68,6 +76,7 @@ class Player(Creature):
     def draw(self):
         self.draw_body()
         self.draw_head()
+        draw_rectangle(*self.get_bb())
         
     def handle_event(self, event):
         if event.type == SDL_KEYDOWN:
@@ -127,11 +136,23 @@ class Player(Creature):
                     self.directionMove &= ~FRONT
                     return
     
-    def get_player_heart(self):
+    # def get_state(self):
+    #     return self.get_player_heart(), self.get_player_key()
+    
+    def get_heart(self):
         return [self.max_hp, self.hp]
     
-    def get_player_key(self):
+    def get_key(self):
         return self.key
+    
+    def get_bb(self):
+        return self.x - 20, self.y - 24, self.x + 20, self.y + 12
+    
+    def handle_collision(self, other, group):
+        if group == 'player:room':
+            # print(other.type)
+            if other.type == 'wall' or other.type == 'rock':
+                self.x, self.y = self.prevX, self.prevY
     
     ### Player extra functions ###
     

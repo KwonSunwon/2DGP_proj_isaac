@@ -3,7 +3,7 @@ import game_framework
 import game_world
 
 from ui import UI
-from Player import Player
+from player import Player
 from stage import Stage
 
 
@@ -16,11 +16,17 @@ def enter():
     global ui, player, stage
     player = Player()
     stage = Stage()
+    stage.set_stage()
     ui = UI()
     
-    stage.set_stage()
+    game_world.add_object(stage, 0)
+    game_world.add_object(player, 2)
+    game_world.add_object(ui, 5)
+
+    game_world.add_collision_group(player, game_world.objects[1], 'player:room')
 
 def exit():
+    game_world.clear()
     pass
 
 
@@ -45,20 +51,40 @@ def handle_events():
 
 
 def update():
-    heart = player.get_player_heart()
-    key = player.get_player_key()
-    stage_state = stage.get_stage()
-    ui.update(heart, key, stage_state)
+    global ui
+    # UI로 상태 전달
+    ui.set_state(player, stage)
     
-    player.update()
+    for game_objects in game_world.all_objects():
+        game_objects.update()
+    
+    for a, b, group in game_world.all_collision_pairs():
+        if collide(a, b):
+            # print('collide')
+            a.handle_collision(b, group)
+            b.handle_collision(a, group)
 
 
 def draw():
     clear_canvas()
-    stage.draw()
-    ui.draw()
-    player.draw()
+    # stage.draw()
+    # ui.draw()
+    # player.draw()
+    for game_objects in game_world.all_objects():
+        game_objects.draw()
     update_canvas()
+    
+    
+def collide(a, b):
+    left_a, bottom_a, right_a, top_a = a.get_bb()
+    left_b, bottom_b, right_b, top_b = b.get_bb()
+
+    if left_a > right_b: return False
+    if right_a < left_b: return False
+    if top_a < bottom_b: return False
+    if bottom_a > top_b: return False
+
+    return True
     
     
 def test_self():

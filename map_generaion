@@ -1,0 +1,27 @@
+--Pseudo lua code for getting the number of rooms for a floor.
+
+NumberOfRooms = Min(20, Rand(0, 1) + 5 + Floor(StageId * 10 / 3)) --방 개수 결정
+
+--Pseudo lua code for getting the number of deadends a floor must have.
+
+MinDeadEnds = 5
+if StageId ~= 1 then
+ MinDeadEnds += 1
+end
+
+--Deadends are sorted by distance from the starting room descending.
+--e.g. Boss room is placed in the farthest deadend, super secret is placed in the next farthest deadend
+
+--DequeueDeadend also resizes the deadend. This is important to note because that means most deadends get changed to a 1x1 by the end of this.
+
+PlaceRoom(ROOM_BOSS, DequeueDeadend())
+
+--Treasure
+if StageId < 7 or (StageId < 9 and HasTrinket(BloodyCrown)) then
+	PlaceRoom(ROOM_TREASURE, DequeueDeadend())
+end
+
+-- Grave Room
+if StageId == 11 and StageType == 0 then --Dark Room
+	PlaceGrave(DequeueDeadend())
+end
