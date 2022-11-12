@@ -1,8 +1,8 @@
 
 # layer 0: background(stage)
 # layer 1: objects(room objects, item)
-# layer 2: creature(player, enemy)
-# layer 3: flying creature(enemy)
+# layer 2: player
+# layer 3: enemy
 # layer 4: effects
 # layer 5: ui
 

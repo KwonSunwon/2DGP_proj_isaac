@@ -1,3 +1,5 @@
+from define import *
+
 BASEMENT, CAVES = 0, 1
 WALL = 20
 DOOR_NORMAL = 21
@@ -22,8 +24,8 @@ type_01 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WA
 
 type_02 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WALL, WALL, WALL, WALL, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
-            [WALL, None, ROCK, ROCK,JAR,JAR, None, None, None, None,None, ROCK, ROCK, None, WALL],
-            [WALL, None, ROCK, ROCK,JAR,JAR, None, None, None, None,None, ROCK, ROCK, None, WALL],
+            [WALL, None, ROCK, ROCK,JAR,JAR, None, None, None, FLY,None, ROCK, ROCK, None, WALL],
+            [WALL, None, ROCK, ROCK,JAR,JAR, None, None, None, None,FLY, ROCK, ROCK, None, WALL],
             [DOOR_NORMAL, None, None, None, None, None, None, None, None, None,None, None, None, None, DOOR_BOSS],
             [WALL, None, ROCK, ROCK, None, None, None, None, None, None,None, ROCK, ROCK, None, WALL],
             [WALL, None, ROCK, ROCK, None, None, None, None, None, None,None, ROCK, ROCK, None, WALL],

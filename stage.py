@@ -2,10 +2,12 @@ from cmath import pi
 from pico2d import *
 import game_world
 
-import player
+from define import *
 
+import player
 import room_type
 import static
+import enemy
 
 width = 1440
 height = 864
@@ -14,19 +16,6 @@ height = 864
 OPEN, CLOSE, LOCK = 1, 2, 3
 
 NORTH, SOUTH, EAST, WEST = range(4)
-
-BASEMENT, CAVES = 0, 1
-WALL = 20
-DOOR_NORMAL = 21
-DOOR_TREASURE = 22
-DOOR_BOSS = 23
-DOOR_TRAP = 24
-
-ROCK = 30
-JAR = 31
-SPIKE = 32
-POOP = 33
-
 
 class Room:
     background_image = None
@@ -37,6 +26,7 @@ class Room:
         self.grid = [[None] * 15 for i in range(9)]
         self.door_state = [None, None, None, None]
         self.objects = []
+        self.enemy = []
         
     
     def add_event(self, event):
@@ -68,8 +58,12 @@ class Room:
                     self.objects.append(static.Spike(x, y))
                 elif room_type[y][x] == POOP:
                     self.objects.append(static.Poop(x, y))
+                elif room_type[y][x] == FLY:
+                    self.enemy.append(enemy.Fly(x, y))
                     
+                
         game_world.add_objects(self.objects, 1)
+        game_world.add_objects(self.enemy, 3)
 
             
     def draw_grid(self):

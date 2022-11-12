@@ -239,8 +239,9 @@ class Player(Creature):
             if self.shootCoolTime <= 0:
                 # print("shoot")
                 tear = Tear(self.x, self.y, self.lookHead)
-                game_world.add_object(tear, 1)
+                game_world.add_object(tear, 4)
                 game_world.add_collision_group(None, tear, 'room:tears')
+                game_world.add_collision_group(None, tear, 'enemy:tears')
                 self.shootCoolTime = self.shootSpeed * 50
                 self.shootFrame = 100
             

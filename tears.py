@@ -20,11 +20,15 @@ class Tear(Creature):
         if Tear.image == None:
             Tear.image = load_image('resources/effect/bulletatlas.png')
 
+        # game_world.add_collision_group(None, self, 'room:tears')
+        # game_world.add_collision_group(None, self, 'enemy:tears')
+
         self.x, self.y = x, y + 16
         self.direction = direction
         self.hp = 1
         self.speed = 600
-        self.width, self.height = 64, 64
+        self.draw_width, self.draw_height = 64, 64
+        self.width, self.height = 32, 32
         
         self.kill_frame = 0
         # print('Add Tear')
@@ -45,19 +49,22 @@ class Tear(Creature):
                 game_world.remove_object(self)
                 
             self.kill_frame = self.kill_frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
-            print(self.kill_frame)
+            # print(self.kill_frame)
         
         
     
     def draw(self):
         if self.hp == 1:
-            self.image.clip_draw(224, 480, 32, 32, self.x, self.y, self.width, self.height)
+            self.image.clip_draw(224, 480, 32, 32, self.x, self.y, self.draw_width, self.draw_height)
         elif self.hp == 0:
-            self.image.clip_draw(CLIP_POS[int(self.kill_frame)][0], CLIP_POS[int(self.kill_frame)][1], 64, 64, self.x, self.y, self.width + 64, self.height + 64)
+            self.image.clip_draw(CLIP_POS[int(self.kill_frame)][0], CLIP_POS[int(self.kill_frame)][1], 64, 64, self.x, self.y, self.draw_width + 64, self.draw_height + 64)
+        
+        draw_rectangle(*self.get_bb())
             
             
     def handle_collision(self, other, group):
-        print('Tear collision')
+        # print('Tear collision')
         if group == 'room:tears':
-            if self.hp == 1:
-                self.hp = 0
+            self.hp = 0
+        elif group == 'enemy:tears':
+            self.hp = 0

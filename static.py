@@ -152,14 +152,12 @@ class Door(Static):
             door.clip_composite_draw(0, 144, 64, 48, pi, 'h', 7 * 96 + 48, 96, 192, 128)
             door.clip_composite_draw(64, 144, 64, 48, pi, 'h', 7 * 96 + 48, 96, 192, 128)
             door.clip_composite_draw(0, 192, 64, 48, pi, 'h', 7 * 96 + 48, 96, 192, 128)
-            
+        
+        draw_rectangle(*self.get_bb())
+        
     def get_bb(self):
-        if self.direction == 0:
-            return 7 * 96 + 48, 8 * 96, 192, 128
-        elif self.direction == 1:
-            return 96 + 16, 4 * 96 + 48, 192, 144
-        elif self.direction == 2:
-            return 14 * 96 - 16, 4 * 96 + 48, 192, 144
-        elif self.direction == 3:
-            return 7 * 96 + 48, 96, 192, 128
+        x = self.x * self.WIDTH + 64
+        y = (8 - self.y) * self.HEIGHT + 48
+        return x, y, x + self.WIDTH, y + self.HEIGHT
+        
     pass
