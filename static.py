@@ -127,6 +127,7 @@ class Door(Static):
             self.direction = 3
         
         self.shape_type = type
+        self.isOpen = False
         
     def draw(self):
         if self.shape_type == 21:
@@ -137,20 +138,32 @@ class Door(Static):
             door = Door.boss_image
         
         if self.direction == 0:
-            door.clip_composite_draw(0, 144, 64, 48, 0, '', 7 * 96 + 48, 8 * 96, 192, 128)
-            door.clip_composite_draw(64, 144, 64, 48, 0, '', 7 * 96 + 48, 8 * 96, 192, 128)
-            door.clip_composite_draw(0, 192, 64, 48, 0, '', 7 * 96 + 48, 8 * 96, 192, 128)
+            if self.isOpen:
+                door.clip_composite_draw(64, 192, 64, 48, 0, '', 7 * 96 + 48, 8 * 96, 192, 128) # open 
+            else:
+                door.clip_composite_draw(0, 144, 64, 48, 0, '', 7 * 96 + 48, 8 * 96, 192, 128) # left door
+                door.clip_composite_draw(64, 144, 64, 48, 0, '', 7 * 96 + 48, 8 * 96, 192, 128) # right door
+            door.clip_composite_draw(0, 192, 64, 48, 0, '', 7 * 96 + 48, 8 * 96, 192, 128) # door frame
         elif self.direction == 1:
-            door.clip_composite_draw(0, 144, 64, 48, pi / 2, 'w', 96 + 16, 4 * 96 + 48, 192, 144)
-            door.clip_composite_draw(64, 144, 64, 48, pi / 2, 'w', 96 + 16, 4 * 96 + 48, 192, 144)
+            if self.isOpen:
+                door.clip_composite_draw(64, 192, 64, 48, pi / 2, 'w', 96 + 16, 4 * 96 + 48, 192, 144)
+            else:
+                door.clip_composite_draw(0, 144, 64, 48, pi / 2, 'w', 96 + 16, 4 * 96 + 48, 192, 144)
+                door.clip_composite_draw(64, 144, 64, 48, pi / 2, 'w', 96 + 16, 4 * 96 + 48, 192, 144)
             door.clip_composite_draw(0, 192, 64, 48, pi / 2, 'w', 96 + 16, 4 * 96 + 48, 192, 144)
         elif self.direction == 2:
-            door.clip_composite_draw(0, 144, 64, 48, -pi / 2, 'h', 14 * 96 - 16, 4 * 96 + 48, 192, 144)
-            door.clip_composite_draw(64, 144, 64, 48, -pi / 2, 'h', 14 * 96 - 16, 4 * 96 + 48, 192, 144)
+            if self.isOpen:
+                door.clip_composite_draw(64, 192, 64, 48, -pi / 2, 'h', 14 * 96 - 16, 4 * 96 + 48, 192, 144)
+            else:
+                door.clip_composite_draw(0, 144, 64, 48, -pi / 2, 'h', 14 * 96 - 16, 4 * 96 + 48, 192, 144)
+                door.clip_composite_draw(64, 144, 64, 48, -pi / 2, 'h', 14 * 96 - 16, 4 * 96 + 48, 192, 144)
             door.clip_composite_draw(0, 192, 64, 48, -pi / 2, 'h', 14 * 96 - 16, 4 * 96 + 48, 192, 144)
         elif self.direction == 3:
-            door.clip_composite_draw(0, 144, 64, 48, pi, 'h', 7 * 96 + 48, 96, 192, 128)
-            door.clip_composite_draw(64, 144, 64, 48, pi, 'h', 7 * 96 + 48, 96, 192, 128)
+            if self.isOpen:
+                door.clip_composite_draw(64, 192, 64, 48, pi, 'h', 7 * 96 + 48, 96, 192, 128)
+            else:
+                door.clip_composite_draw(0, 144, 64, 48, pi, 'h', 7 * 96 + 48, 96, 192, 128)
+                door.clip_composite_draw(64, 144, 64, 48, pi, 'h', 7 * 96 + 48, 96, 192, 128)
             door.clip_composite_draw(0, 192, 64, 48, pi, 'h', 7 * 96 + 48, 96, 192, 128)
         
         draw_rectangle(*self.get_bb())

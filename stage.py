@@ -33,6 +33,13 @@ class Room:
         pass
     
     def update(self):
+        # print(game_world.objects[3])
+        if game_world.objects[3] == []:
+            # print('clear')
+            # Room clear, open door
+            for object in self.objects:
+                if object.type == 'door':
+                    object.isOpen = True
         pass
     
     def set_room(self, room_type):
@@ -87,6 +94,7 @@ class Stage:
         pass
     
     def update(self):
+        self.stage[self.playerPos[0]][self.playerPos[1]].update()
         pass
     
     def draw(self):
