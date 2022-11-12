@@ -49,8 +49,11 @@ class Fly(Enemy):
     TPA_live = 0.2
     TPA_die = 0.7
     
-    width = 64
-    height = 64
+    width = 32
+    height = 32
+    
+    draw_width = 64
+    draw_height = 64
     
     def __init__(self, x, y):
         if Fly.image == None:
@@ -58,6 +61,7 @@ class Fly(Enemy):
         super().__init__(x, y)
         self.hp = 2
         self.frame = 0
+        self.speed = 100
         pass
 
     def add_event(self, event):
@@ -65,19 +69,31 @@ class Fly(Enemy):
 
     def update(self):
         if self.hp > 0:
+            player_pos = [game_world.objects[2][0].x, game_world.objects[2][0].y]
+            if self.x < player_pos[0]:
+                self.x += self.speed * game_framework.frame_time
+            elif self.x > player_pos[0]:
+                self.x -= self.speed * game_framework.frame_time
+            if self.y < player_pos[1]:
+                self.y += self.speed * game_framework.frame_time
+            elif self.y > player_pos[1]:
+                self.y -= self.speed * game_framework.frame_time
+            
             self.frame = (self.frame + self.FPA_live * 1.0 / self.TPA_live * game_framework.frame_time) % 4
+            
         elif self.hp == 0:
             self.frame = (self.frame + self.FPA_die * 1.0 / self.TPA_die * game_framework.frame_time) % 12
             if self.frame >= 11:
                 self.hp = -1
                 game_world.remove_object(self)
+                        
         pass
 
     def draw(self):
         if self.hp > 0:
-            self.image.clip_draw(self.live_pos[int(self.frame)][0], self.live_pos[int(self.frame)][1], 32, 32, self.x, self.y, self.width, self.height)
+            self.image.clip_draw(self.live_pos[int(self.frame)][0], self.live_pos[int(self.frame)][1], 32, 32, self.x, self.y, self.draw_width, self.draw_height)
         elif self.hp == 0:
-            self.image.clip_draw(self.die_pos[int(self.frame)][0], self.die_pos[int(self.frame)][1], 64, 64, self.x, self.y, self.width, self.height)
+            self.image.clip_draw(self.die_pos[int(self.frame)][0], self.die_pos[int(self.frame)][1], 64, 64, self.x, self.y, self.draw_width, self.draw_height)
         
         draw_rectangle(*self.get_bb())
 

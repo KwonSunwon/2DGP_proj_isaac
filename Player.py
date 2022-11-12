@@ -22,6 +22,8 @@ MOVE_CLIP_POS = ([0, 448], [32, 448], [64, 448], [96, 448], [128, 448], [160, 44
 MOVE_SIDE_CLIP_POS = ([0, 416], [32, 416], [64, 416], [96, 416], [128, 416], [160, 416], [192, 416], [224, 416], [0, 384], [32, 384])
 HEAD_GAP = 29 
 
+HIT_CLIP_POS = ([128, 256])
+
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAME_PER_ACTION = 10
@@ -54,9 +56,11 @@ class Player(Creature):
         
         self.key = 0
         
-        self.shootSpeed = 8
+        self.shootSpeed = 5
         self.shootCoolTime = 0
         self.shootFrame = 0
+
+        self.hitCoolTime = 0
 
     def add_event(self, event):
         pass
@@ -67,6 +71,10 @@ class Player(Creature):
         ### Move head ###
         self.update_head()
     
+        self.frame = (self.frame + FRAME_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10   
+    
+        if self.hitCoolTime > 0:
+            self.hitCoolTime -= 1000 * game_framework.frame_time / 2
         # print("shootFrame : ", self.shootFrame)
         
         # self.shootFrame = (self.shootFrame + (FRAME_PER_ACTION * self.shootSpeed)* ACTION_PER_TIME * game_framework.frame_time) % 200
@@ -74,8 +82,13 @@ class Player(Creature):
             # self.shootFrame = 0
     
     def draw(self):
-        self.draw_body()
-        self.draw_head()
+        if self.hitCoolTime <= 0:
+            self.image.opacify(1)
+            self.draw_body()
+            self.draw_head()
+        elif self.hitCoolTime > 0:
+            self.draw_hit()
+            
         draw_rectangle(*self.get_bb())
         
     def handle_event(self, event):
@@ -153,6 +166,15 @@ class Player(Creature):
             # print(other.type)
             if other.type == 'wall' or other.type == 'rock':
                 self.x, self.y = self.prevX, self.prevY
+            elif other.type == 'door':
+                pass
+        elif group == 'player:enemy' and self.hitCoolTime <= 0:
+            self.hp -= 1
+            self.hitCoolTime = 250
+            self.frame = 0
+            if self.hp <= 0:
+                # game_framework.change_state(static.game_over)
+                pass
     
     ### Player extra functions ###
     
@@ -176,6 +198,13 @@ class Player(Creature):
             self.image.clip_composite_draw(MOVE_SIDE_CLIP_POS[int(self.frame)][X], MOVE_SIDE_CLIP_POS[int(self.frame)][Y], CLIP_SIZE, CLIP_SIZE, pi, 'v', self.x, self.y, IMAGE_SIZE, IMAGE_SIZE)
         elif self.lookBody == RIGHT:
             self.image.clip_composite_draw(MOVE_SIDE_CLIP_POS[int(self.frame)][X], MOVE_SIDE_CLIP_POS[int(self.frame)][Y], CLIP_SIZE, CLIP_SIZE, 0, '', self.x, self.y, IMAGE_SIZE, IMAGE_SIZE)
+
+    def draw_hit(self):
+        if int(self.frame) % 2 == 0:
+            self.image.opacify(0.5)
+        else:
+            self.image.opacify(1)
+        self.image.clip_draw(HIT_CLIP_POS[0], HIT_CLIP_POS[1], CLIP_SIZE * 2, CLIP_SIZE * 2, self.x, self.y + 32, IMAGE_SIZE * 2, IMAGE_SIZE * 2)
     ######################
     
     ### Player Update Functions ###
@@ -218,8 +247,6 @@ class Player(Creature):
         
         # self.x = clamp(144 + 32, self.x, 1440 - 144 - 32)
         # self.y = clamp(144 + 32, self.y, 864 - 144)
-        
-        self.frame = (self.frame + FRAME_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10
         pass
     
     def update_head(self):
@@ -242,13 +269,14 @@ class Player(Creature):
                 game_world.add_object(tear, 4)
                 game_world.add_collision_group(None, tear, 'room:tears')
                 game_world.add_collision_group(None, tear, 'enemy:tears')
+                
                 self.shootCoolTime = self.shootSpeed * 50
                 self.shootFrame = 100
             
         if self.shootCoolTime > 0:
                 # print("game_framework.frame_time : ", int(game_framework.frame_time * 1000))
-                self.shootCoolTime -= 1
+                self.shootCoolTime -= 1000 * game_framework.frame_time / 2
         if self.shootFrame > 0:
-            self.shootFrame -= 1
+            self.shootFrame -= 1000 * game_framework.frame_time / 2
         pass
     ##############################
