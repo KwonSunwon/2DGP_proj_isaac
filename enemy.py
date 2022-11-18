@@ -39,9 +39,6 @@ class Enemy(Creature):
                 self.hp -= 1
                 if self.hp == 0:
                     self.frame = 0
-        elif group == 'room:enemy' and self.type != 'fly':
-            if other.type == 'wall' or other.type == 'rock':
-                self.x, self.y = self.prevX, self.prevY
 
 
 class Fly(Enemy):
@@ -146,10 +143,10 @@ class Charger(Enemy):
     image = None
     
     FPA_live = 4
-    TPA_live = 0.5
+    TPA_live = 0.8
     
-    width = 32
-    height = 16
+    width = 64
+    height = 32
     
     draw_width = 96
     draw_height = 96
@@ -162,11 +159,11 @@ class Charger(Enemy):
         self.frame = 0
         self.speed = 50
         self.wander_speed = 50
-        self.rush_speed = 300
+        self.rush_speed = 500
+        self.dir = random.randint(0, 3)
         
         self.collision = False
-        
-        self.dir = random.randint(0, 3)
+        self.rush = False
         
         self.wander_timer = 2
         
@@ -195,18 +192,38 @@ class Charger(Enemy):
 
     def draw(self):
         if self.hp > 0:
-            if self.dir == FRONT:
-                self.image.clip_draw(32 * int(self.frame), 32, 32, 32, self.x, self.y, self.draw_width, self.draw_height)
-            elif self.dir == BACK:
-                self.image.clip_draw(32 * int(self.frame), 64, 32, 32, self.x, self.y, self.draw_width, self.draw_height)
-            elif self.dir == LEFT:
-                self.image.clip_composite_draw(32 * int(self.frame), 96, 32, 32, 0, 'h', self.x, self.y, self.draw_width, self.draw_height)
-            elif self.dir == RIGHT:
-                self.image.clip_draw(32 * int(self.frame), 96, 32, 32, self.x, self.y, self.draw_width, self.draw_height)
+            if not self.rush:
+                if self.dir == FRONT:
+                    self.image.clip_draw(32 * int(self.frame), 32, 32, 32, self.x, self.y, self.draw_width, self.draw_height)
+                elif self.dir == BACK:
+                    self.image.clip_draw(32 * int(self.frame), 64, 32, 32, self.x, self.y, self.draw_width, self.draw_height)
+                elif self.dir == LEFT:
+                    self.image.clip_composite_draw(32 * int(self.frame), 96, 32, 32, 0, 'h', self.x, self.y, self.draw_width, self.draw_height)
+                elif self.dir == RIGHT:
+                    self.image.clip_draw(32 * int(self.frame), 96, 32, 32, self.x, self.y, self.draw_width, self.draw_height)
+            elif self.rush:
+                if self.dir == FRONT:
+                    self.image.clip_draw(0, 0, 32, 32, self.x, self.y, self.draw_width, self.draw_height)
+                elif self.dir == BACK:
+                    self.image.clip_draw(64, 0, 32, 32, self.x, self.y, self.draw_width, self.draw_height)
+                elif self.dir == LEFT:
+                    self.image.clip_composite_draw(32, 0, 32, 32, 0, 'h', self.x, self.y, self.draw_width, self.draw_height)
+                elif self.dir == RIGHT:
+                    self.image.clip_draw(32, 0, 32, 32, self.x, self.y, self.draw_width, self.draw_height)
+                
+        draw_rectangle(*self.get_bb())
         pass
 
     def handle_event(self, event):
         pass
+    
+    def handle_collision(self, other, group):
+        if group == 'room:enemy':
+            # print("charger collision")
+            self.collision = True
+            self.speed = 0
+            return
+        return super().handle_collision(other, group)
     
     def wander(self):
         self.speed = self.wander_speed
@@ -214,25 +231,48 @@ class Charger(Enemy):
         if self.collision:
             self.wander_timer = 2
             self.dir = random.randint(0, 3)
+            self.collision = False
         if self.wander_timer <= 0:
             self.wander_timer = 2
             self.dir = random.randint(0, 3)
         return BehaviorTree.SUCCESS
     
     def find_player(self):
-        if self.x - 64 <= game_world.objects[2][0].x <= self.x + 64:
+        if self.x - 32 <= game_world.objects[2][0].x <= self.x + 32 and self.collision == False:
             self.dir = BACK if game_world.objects[2][0].y > self.y else FRONT
-            self.speed = self.rush_speed
+            self.rush = True
+            self.wander_timer = 1
+            self.speed = 0
             return BehaviorTree.SUCCESS
-        elif self.y - 64 <= game_world.objects[2][0].y <= self.y + 64:
+        elif self.y - 32 <= game_world.objects[2][0].y <= self.y + 32 and self.collision == False:
             self.dir = RIGHT if game_world.objects[2][0].x > self.x else LEFT
-            self.speed = self.rush_speed
+            self.rush = True
+            self.wander_timer = 1
+            self.speed = 0
             return BehaviorTree.SUCCESS
         return BehaviorTree.FAIL
     
-    def rush_player(self):
+    def rush_ready(self):
+        self.wander_timer -= game_framework.frame_time
+        if self.wander_timer <= 0:
+            self.speed = self.rush_speed
+            return BehaviorTree.SUCCESS
+        return BehaviorTree.RUNNING
+    
+    def rush_to_player(self):
         if self.collision:
-            self.speed = 0
+            if self.dir == FRONT:
+                self.dir = BACK
+            elif self.dir == BACK:
+                self.dir = FRONT
+            elif self.dir == LEFT:
+                self.dir = RIGHT
+            elif self.dir == RIGHT:
+                self.dir = LEFT
+                
+            self.speed = self.wander_speed
+            self.wander_timer = 2
+            self.rush = False
             return BehaviorTree.SUCCESS
         else:
             return BehaviorTree.RUNNING
@@ -241,11 +281,20 @@ class Charger(Enemy):
         charger_wander_node = LeafNode("ChargerWander", self.wander)
         
         charger_find_player = LeafNode("ChargerFindPlayer", self.find_player)
-        charger_rush_node = LeafNode("ChargerRush", self.rush_player)
+        charger_rush_ready_node = LeafNode("ChargerRushReady", self.rush_ready)
+        charger_rush_node = LeafNode("ChargerRush", self.rush_to_player)
         charger_attack_node = SequenceNode("ChargerAttack")
-        charger_attack_node.add_children(charger_find_player, charger_rush_node)
+        charger_attack_node.add_children(charger_find_player, charger_rush_ready_node, charger_rush_node)
 
         charger_node = SelectorNode("Charger")
         charger_node.add_children(charger_attack_node, charger_wander_node)
         
         self.bt = BehaviorTree(charger_node)
+        
+    def get_bb(self):
+        if self.dir == FRONT or self.dir == BACK:
+            self.width, self.height = 32, 64
+        else:
+            self.width, self.height = 64, 32
+        return super().get_bb()        
+
