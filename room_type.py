@@ -43,7 +43,7 @@ type_03 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WA
             [WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_TREASURE, WALL, WALL,WALL, WALL, WALL, WALL, WALL]]
 
 type_04 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WALL, WALL, WALL, WALL, WALL],
-            [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
+            [WALL, None, None, None, None, None, None, None, None, None,CHARGER, None, None, None, WALL],
             [WALL, ROCK, ROCK, ROCK, None, None, None, None, None, None,None, ROCK, ROCK, ROCK, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [DOOR_NORMAL, None, None, None, None, None, None, None, None, None,None, None, None, None, DOOR_NORMAL],

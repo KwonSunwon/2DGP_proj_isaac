@@ -67,6 +67,8 @@ class Room:
                     self.objects.append(static.Poop(x, y))
                 elif room_type[y][x] == FLY:
                     self.enemy.append(enemy.Fly(x, y))
+                elif room_type[y][x] == CHARGER:
+                    self.enemy.append(enemy.Charger(x, y))
                     
                 
         game_world.add_objects(self.objects, 1)
@@ -105,7 +107,7 @@ class Stage:
     
     def set_stage(self):
         self.stage[4][4] = Room()
-        self.stage[4][4].set_room(room_type.type_02)
+        self.stage[4][4].set_room(room_type.type_04)
         
 
     def get_state(self):

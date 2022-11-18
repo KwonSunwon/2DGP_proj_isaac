@@ -11,3 +11,4 @@ SPIKE = 32
 POOP = 33
 
 FLY = 40
+CHARGER = 41
