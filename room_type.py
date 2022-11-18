@@ -31,3 +31,23 @@ type_02 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WA
             [WALL, None, ROCK, ROCK, None, None, None, None, None, None,None, ROCK, ROCK, None, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_TREASURE, WALL, WALL,WALL, WALL, WALL, WALL, WALL]]
+
+type_03 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WALL, WALL, WALL, WALL, WALL],
+            [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
+            [WALL, None, ROCK, ROCK,None, FLY, None, None, None, FLY,None, ROCK, ROCK, None, WALL],
+            [WALL, None, ROCK, ROCK,FLY,None, None, None, None, None,FLY, ROCK, ROCK, None, WALL],
+            [DOOR_NORMAL, None, None, None, None, None, None, None, None, None,None, None, None, None, DOOR_BOSS],
+            [WALL, None, ROCK, ROCK, None, None, None, None, None, None,None, ROCK, ROCK, None, WALL],
+            [WALL, None, ROCK, ROCK, None, None, None, None, None, None,None, ROCK, ROCK, None, WALL],
+            [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
+            [WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_TREASURE, WALL, WALL,WALL, WALL, WALL, WALL, WALL]]
+
+type_04 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WALL, WALL, WALL, WALL, WALL],
+            [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
+            [WALL, ROCK, ROCK, ROCK, None, None, None, None, None, None,None, ROCK, ROCK, ROCK, WALL],
+            [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
+            [DOOR_NORMAL, None, None, None, None, None, None, None, None, None,None, None, None, None, DOOR_NORMAL],
+            [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
+            [WALL, ROCK, ROCK, ROCK, None, None, None, None, None, None,None, ROCK, ROCK, ROCK, WALL],
+            [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
+            [WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WALL, WALL, WALL, WALL, WALL]]
