@@ -1,5 +1,6 @@
 from pico2d import *
 from creature import Creature
+from tears import Tear
 
 import math
 import random
@@ -165,6 +166,8 @@ class Meat(Enemy):
         
         self.action = 'idle'
         self.idle_timer = 1
+        
+        self.isShoot = False
         pass
 
     def add_event(self, event):
@@ -239,9 +242,14 @@ class Meat(Enemy):
         self.action = 'attack'
         self.speed = 0
         
+        if int(self.frame) == 6 and self.isShoot == False:
+            self.shoot()
+            self.isShoot = True
+            
         if self.frame >= self.FPA - 1:
             self.frame = 0
             self.idle_timer = 1
+            self.isShoot = False
             return BehaviorTree.SUCCESS
         return BehaviorTree.RUNNING
     
@@ -262,6 +270,7 @@ class Meat(Enemy):
         
         if self.frame >= self.FPA - 1:
             self.frame = 0
+            self.isShoot = False
             return BehaviorTree.SUCCESS
         return BehaviorTree.RUNNING
 
@@ -305,6 +314,16 @@ class Meat(Enemy):
             self.x, self.y = self.prevX, self.prevY
             self.speed = 0
         return super().handle_collision(other, group)
+    
+    def shoot(self):
+        direction = [0b0001, 0b0010, 0b0100, 0b1000]
+        tear = []
+        for i in range(0, 4):
+            tear.append(Tear(self.x, self.y - 16, direction[i], 1))
+            # print(tear)
+        game_world.add_objects(tear, 4)
+        game_world.add_collision_group(None, tear, 'player:bullet')
+        game_world.add_collision_group(None, tear, 'room:tears')
 
 class Charger(Enemy):
     type = 'charger'
@@ -469,4 +488,4 @@ class Charger(Enemy):
         
         self.bt = BehaviorTree(charger_node)
 
-
+    

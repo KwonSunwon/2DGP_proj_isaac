@@ -26,6 +26,7 @@ def enter():
     game_world.add_collision_group(server.objects, None, 'room:tears')
     game_world.add_collision_group(server.objects, server.enemy, 'room:enemy')
     game_world.add_collision_group(server.enemy, None, 'enemy:tears')
+    game_world.add_collision_group(server.player, None, 'player:bullet')
     
 
 def exit():

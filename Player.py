@@ -183,6 +183,13 @@ class Player(Creature):
             if self.hp <= 0:
                 # game_framework.change_state(static.game_over)
                 pass
+        elif group == 'player:bullet':
+            self.hp -= 1
+            self.hitCoolTime = 250
+            self.frame = 0
+            if self.hp <= 0:
+                # game_framework.change_state(static.game_over)
+                pass
     
     ### Player extra functions ###
     
@@ -273,7 +280,7 @@ class Player(Creature):
             # print("shootCoolTime : ", self.shootCoolTime)
             if self.shootCoolTime <= 0:
                 # print("shoot")
-                tear = Tear(self.x, self.y, self.lookHead)
+                tear = Tear(self.x, self.y, self.lookHead, 0)
                 game_world.add_object(tear, 4)
                 game_world.add_collision_group(None, tear, 'room:tears')
                 game_world.add_collision_group(None, tear, 'enemy:tears')

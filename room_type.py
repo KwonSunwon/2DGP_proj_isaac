@@ -98,4 +98,4 @@ stage_01 = [[None, None, type_boss, None, None],
             [None, None, type_05, None, None],
             [None, None, type_07, None, None],
             [None, None, type_06, None, None],
-            [None, None, start, None, None]]
+            [None, None, type_07, None, None]]
