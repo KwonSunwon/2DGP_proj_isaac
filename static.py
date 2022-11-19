@@ -24,7 +24,7 @@ class Static:
         pass
 
     def draw(self):
-        # draw_rectangle(*self.get_bb())
+        draw_rectangle(*self.get_bb())
         pass
 
     def handle_event(self, event):
@@ -82,8 +82,12 @@ class Spike(Static):
     
     def __init__(self, x, y):
         if Spike.image == None:
-            Spike.image = pico2d.load_image('resources/objects/spike.png')
+            Spike.image = pico2d.load_image('resources/objects/spikes.png')
         super().__init__(x, y)
+        
+    def draw(self):
+        self.image.clip_draw(0, 128, 32, 32, self.x + self.WIDTH//2, self.y + self.WIDTH//2, self.WIDTH + 4, self.HEIGHT + 4)
+        draw_rectangle(*self.get_bb())
     pass
 
 
@@ -95,6 +99,15 @@ class Poop(Static):
         if Poop.image == None:
             Poop.image = pico2d.load_image('resources/objects/poop.png')
         super().__init__(x, y)
+        self.hp = 4
+        
+    def draw(self):
+        self.image.clip_draw(32 * (4 - self.hp), 0, 32, 32, self.x + self.WIDTH//2, self.y + self.WIDTH//2, self.WIDTH + 4, self.HEIGHT + 4)
+        draw_rectangle(*self.get_bb())
+        
+    def handle_collision(self, other, group):
+        if group == 'room:tears' and self.hp > 0:
+            self.hp -= 1
     pass
 
 # Normal Door 21
@@ -191,3 +204,29 @@ class Door(Static):
             y = 710
         return x, y
     pass
+
+
+class TrapDoor(Static):
+    type = 'trapdoor'
+    image = None
+    
+    def __init__(self, x, y):
+        if TrapDoor.image == None:
+            TrapDoor.image = pico2d.load_image('resources/objects/trap_door.png')
+        super().__init__(x, y)
+        
+        self.isOpen = True
+        self.frame = 0
+        
+    def update(self):
+        pass
+    
+    def draw(self):
+        if self.isOpen:
+            self.image.clip_draw(0, 192, 64, 64, self.x + self.WIDTH//2, self.y + self.WIDTH//2, self.WIDTH + 96, self.HEIGHT + 96)
+
+        draw_rectangle(*self.get_bb())
+        pass
+    
+    def get_bb(self):
+        return self.x + 8, self.y + 8, self.x + self.WIDTH - 8, self.y + self.HEIGHT - 8

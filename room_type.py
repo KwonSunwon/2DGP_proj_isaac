@@ -85,7 +85,7 @@ type_07 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WA
 
 type_boss = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL,WALL, WALL, WALL, WALL, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
-            [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
+            [WALL, None, None, None, None, None, None, DOOR_TRAP, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
@@ -93,9 +93,19 @@ type_boss = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL,WALL, W
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_BOSS, WALL, WALL,WALL, WALL, WALL, WALL, WALL]]
 
+type_08 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WALL, WALL, WALL, WALL, WALL],
+            [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
+            [WALL, None, POOP, None, SPIKE, None, None, None, None, None,None, None, None, None, WALL],
+            [WALL, None, POOP, None, SPIKE, None, None, None, None, None,None, None, None, None, WALL],
+            [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
+            [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
+            [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
+            [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
+            [WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL,WALL, WALL, WALL, WALL, WALL]]
+
 # Stage 1
 stage_01 = [[None, None, type_boss, None, None],
             [None, None, type_05, None, None],
             [None, None, type_07, None, None],
             [None, None, type_06, None, None],
-            [None, None, type_07, None, None]]
+            [None, None, type_08, None, None]]

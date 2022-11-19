@@ -65,7 +65,7 @@ class Room:
                 elif room_type[y][x] == DOOR_BOSS:
                     self.objects.append(static.Door(x, y, DOOR_BOSS))
                 elif room_type[y][x] == DOOR_TRAP:
-                    self.objects.append(static.Door(x, y, DOOR_TRAP))
+                    self.objects.append(static.TrapDoor(x, y))
                 elif room_type[y][x] == ROCK:
                     self.objects.append(static.Rock(x, y, ROCK))
                 elif room_type[y][x] == JAR:

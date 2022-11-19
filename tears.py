@@ -78,7 +78,10 @@ class Tear(Creature):
     def handle_collision(self, other, group):
         # print('Tear collision')
         if group == 'room:tears':
-            self.hp = 0
+            if other.type == 'poop' and other.hp > 0:
+                self.hp = 0
+            elif other.type != 'poop':
+                self.hp = 0
         elif group == 'enemy:tears':
             self.hp = 0
         elif group == 'player:bullet':

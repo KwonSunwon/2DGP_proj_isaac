@@ -171,10 +171,21 @@ class Player(Creature):
             if other.type == 'wall' or other.type == 'rock':
                 # print("wall")
                 self.x, self.y = self.prevX, self.prevY
-            if other.type == 'door' and other.isOpen:
+            elif other.type == 'door' and other.isOpen:
                 # print("door")
                 self.x, self.y = other.get_position()
                 server.stage.enter_room(other.get_direction())
+            elif other.type == 'spike' and self.hitCoolTime <= 0:
+                self.hp -= 1
+                self.hitCoolTime = 250
+                self.frame = 0
+                if self.hp <= 0:
+                    pass
+            elif other.type == 'poop' and other.hp != 0:
+                self.x, self.y = self.prevX, self.prevY
+            elif other.type == 'trapdoor':
+                # stage change
+                pass
                     
         elif group == 'player:enemy' and self.hitCoolTime <= 0:
             self.hp -= 1
