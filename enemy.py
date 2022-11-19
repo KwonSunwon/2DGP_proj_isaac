@@ -171,15 +171,16 @@ class Meat(Enemy):
         pass
 
     def update(self):
-        self.bt.run()
-        
-        if self.hp >= 0:
+        if self.hp > 0:
+            self.bt.run()
+            
             self.frame = (self.frame + self.FPA * 1.0 / self.TPA * game_framework.frame_time) % self.FPA
             self.x += self.speed * math.cos(self.dir) * game_framework.frame_time
             self.y += self.speed * math.sin(self.dir) * game_framework.frame_time
             
         elif self.hp == 0:
             self.frame = (self.frame + 12 * 1.0 / 0.7 * game_framework.frame_time)
+            # print(self.frame)
             if self.frame >= 11:
                 self.hp = -1
                 game_world.remove_object(self)
@@ -193,7 +194,7 @@ class Meat(Enemy):
 
         # print(type(self.MOVE))        
         # print(int(self.frame))
-        if self.hp >= 0:
+        if self.hp > 0:
             if self.action == 'idle':
                 self.image.clip_composite_draw(0, 128, 64, 64, 0, look, self.x, self.y, self.draw_width, self.draw_height)
             elif self.action == 'move':
@@ -205,12 +206,11 @@ class Meat(Enemy):
             self.dead_effect.clip_draw(self.DEAD[int(self.frame)][0], self.DEAD[int(self.frame)][1], 64, 64, self.x, self.y, 96, 96)
 
         draw_rectangle(*self.get_bb())
-        pass
+        
 
     def wander(self):
         # print("Meat_wander")
         self.action = 'move'
-        self.speed = self.move_speed
         
         if self.frame >= self.FPA - 1:
             self.frame = 0
@@ -227,6 +227,7 @@ class Meat(Enemy):
             self.idle_timer = 1
             self.frame = 0
             self.dir = random.random() * 2 * math.pi
+            self.speed = self.move_speed
             return BehaviorTree.SUCCESS
         return BehaviorTree.RUNNING
     
@@ -291,7 +292,15 @@ class Meat(Enemy):
         return math.sqrt((self.x - player.x) ** 2 + (self.y - player.y) ** 2)
     
     def get_bb(self):
+        if self.hp <= 0:
+            return -100, -100, -100, -100
         return self.x - 32, self.y - 48, self.x + 32, self.y + 16
+    
+    def handle_collision(self, other, group):
+        if group == 'room:enemy':
+            print("Meat:handle_collision")
+            self.speed = 0
+        return super().handle_collision(other, group)
 
 class Charger(Enemy):
     type = 'charger'
@@ -301,7 +310,7 @@ class Charger(Enemy):
     TPA_live = 0.8
     
     width = 64
-    height = 32
+    height = 64
     
     draw_width = 96
     draw_height = 96
@@ -329,9 +338,9 @@ class Charger(Enemy):
         pass
 
     def update(self):
-        self.bt.run()
-        
         if self.hp > 0:
+            self.bt.run()
+            
             if self.dir == FRONT:
                 self.y -= self.speed * game_framework.frame_time
             elif self.dir == BACK:
