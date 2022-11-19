@@ -8,6 +8,7 @@ from math import pi
 from tears import Tear
 
 import static
+import server
 
 MAX_HP = 24
 
@@ -46,6 +47,9 @@ class Player(Creature):
         
         self.x = 720
         self.y = 408
+        # self.x = 720
+        # self.y = 715
+
         self.height = 96
         self.width = 96
         
@@ -166,8 +170,12 @@ class Player(Creature):
             # print(other.type)
             if other.type == 'wall' or other.type == 'rock':
                 self.x, self.y = self.prevX, self.prevY
-            elif other.type == 'door':
-                pass
+            elif other.type == 'door' and other.isOpen:
+                # print(other.get_direction())
+                self.x, self.y = other.get_position()
+                print(self.x, self.y)
+                server.stage.enter_room(other.get_direction())
+                    
         elif group == 'player:enemy' and self.hitCoolTime <= 0:
             self.hp -= 1
             self.hitCoolTime = 250

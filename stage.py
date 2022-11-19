@@ -79,9 +79,16 @@ class Room:
                     
         server.objects = self.objects
         server.enemy = self.enemy
+        
         game_world.add_objects(self.objects, 1)
         game_world.add_objects(self.enemy, 3)
-
+        
+        game_world.add_collision_group(None, self.objects, 'player:room')
+        game_world.add_collision_group(None, self.enemy, 'player:enemy')
+        game_world.add_collision_group(self.objects, None, 'room:tears')
+        game_world.add_collision_group(self.objects, self.enemy, 'room:enemy')
+        game_world.add_collision_group(self.enemy, None, 'enemy:tears')
+    
             
     def draw_grid(self):
         self.background_image.draw(width / 2, height / 2, width, height)
@@ -119,7 +126,6 @@ class Stage:
             for x in range(5):
                 if room_type.stage_01[y][x] != None:
                     self.stage[y][x] = Room()
-        
         # print(self.stage)
         self.stage[4][2].set_room(room_type.stage_01[4][2])
         
@@ -129,16 +135,24 @@ class Stage:
         # self.stage[2][4].set_room(room_type.type_04)
         
     def enter_room(self, direction):
-        if direction == NORTH:
+        for e in self.stage[self.playerPos[0]][self.playerPos[1]].enemy:
+            game_world.remove_object(e)
+        for o in self.stage[self.playerPos[0]][self.playerPos[1]].objects:
+            game_world.remove_object(o)
+        server.objects = []
+        server.enemy = []
+            
+        if direction == 0: # North
             self.playerPos[0] -= 1
-        elif direction == SOUTH:
-            self.playerPos[0] += 1
-        elif direction == EAST:
-            self.playerPos[1] += 1
-        elif direction == WEST:
+        elif direction == 1: # West
             self.playerPos[1] -= 1
+        elif direction == 2: # East
+            self.playerPos[1] += 1
+        elif direction == 3: # South
+            self.playerPos[0] += 1
         
-        self.stage[self.playerPos[0]][self.playerPos[1]].set_room(self.stage[self.playerPos[0]][self.playerPos[1]].room_type)
+        print(self.playerPos)
+        self.stage[self.playerPos[0]][self.playerPos[1]].set_room(room_type.stage_01[self.playerPos[0]][self.playerPos[1]])
         
     def get_state(self):
         return self.get_stage()

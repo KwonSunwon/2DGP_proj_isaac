@@ -173,4 +173,21 @@ class Door(Static):
         y = (8 - self.y) * self.HEIGHT + 48
         return x, y, x + self.WIDTH, y + self.HEIGHT
         
+    def get_direction(self):
+        return self.direction
+    
+    def get_position(self):
+        if self.direction == 0:
+            x = 720
+            y = 165
+        elif self.direction == 1:
+            x = 183
+            y = 408
+        elif self.direction == 2:
+            x = 1241
+            y = 408
+        elif self.direction == 3:
+            x = 720
+            y = 715
+        return x, y
     pass
