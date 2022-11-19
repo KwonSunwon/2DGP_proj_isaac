@@ -15,7 +15,7 @@ def enter():
     server.stage = Stage()
     server.ui = UI()
     
-    server.stage.set_stage()
+    server.stage.set_stage(1)
     
     game_world.add_object(server.stage, 0)
     game_world.add_object(server.player, 2)

@@ -122,6 +122,7 @@ class Stage:
     def __init__(self):
         self.stage = [[None] * 5 for i in range(5)]
         self.playerPos = [4, 2]
+        self.level = 1
     
     def add_event(self, event):
         pass
@@ -136,15 +137,24 @@ class Stage:
     def handle_event(self, event):
         pass
     
-    def set_stage(self):
+    def set_stage(self, level):
+        # print(level)
+
         self.playerPos = [4, 2]
+        self.stage.clear()
+        self.stage = [[None] * 5 for i in range(5)]
+        
+        stage = eval('room_type.stage_0' + str(level))
+        
         for y in range(5):
             for x in range(5):
-                if room_type.stage_01[y][x] != None:
+                if stage[y][x] != None:
+                    # print(stage[y][x])
                     self.stage[y][x] = Room()
         
-        self.stage[self.playerPos[0]][self.playerPos[1]].set_room(room_type.stage_01[self.playerPos[0]][self.playerPos[1]])
+        # print(self.stage[4][2])
         
+        self.enter_room(-1)
         # print(self.stage[self.playerPos[0]][self.playerPos[1]])
         # self.stage[self.playerPos[0]][self.playerPos[1]].set_room(self.stage[self.playerPos[0]][self.playerPos[1]])
         # self.stage[2][4] = Room()
@@ -168,7 +178,8 @@ class Stage:
         elif direction == 3: # South
             self.playerPos[0] += 1
         
-        self.stage[self.playerPos[0]][self.playerPos[1]].set_room(room_type.stage_01[self.playerPos[0]][self.playerPos[1]])        
+        stage = eval('room_type.stage_0' + str(self.level))
+        self.stage[self.playerPos[0]][self.playerPos[1]].set_room(stage[self.playerPos[0]][self.playerPos[1]])        
         
     def get_state(self):
         return self.get_stage()
@@ -178,3 +189,14 @@ class Stage:
     
     def get_room_objects(self):
         return self.stage[self.playerPos[0]][self.playerPos[1]].objects
+
+    def changeStage(self, level):
+        for e in self.stage[self.playerPos[0]][self.playerPos[1]].enemy:
+            game_world.remove_object(e)
+        for o in self.stage[self.playerPos[0]][self.playerPos[1]].objects:
+            game_world.remove_object(o)
+        game_world.objects[4] = []
+        
+        self.level = level
+        # print(self.level)
+        self.set_stage(self.level)
