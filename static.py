@@ -24,7 +24,7 @@ class Static:
         pass
 
     def draw(self):
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         pass
 
     def handle_event(self, event):
@@ -171,7 +171,7 @@ class Door(Static):
     def get_bb(self):
         x = self.x * self.WIDTH + 64
         y = (8 - self.y) * self.HEIGHT + 48
-        return x, y, x + self.WIDTH, y + self.HEIGHT
+        return x - 1, y - 1, x + self.WIDTH + 1, y + self.HEIGHT + 1
         
     def get_direction(self):
         return self.direction
@@ -188,6 +188,6 @@ class Door(Static):
             y = 408
         elif self.direction == 3:
             x = 720
-            y = 715
+            y = 710
         return x, y
     pass

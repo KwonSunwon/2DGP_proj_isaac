@@ -169,11 +169,11 @@ class Player(Creature):
         if group == 'player:room':
             # print(other.type)
             if other.type == 'wall' or other.type == 'rock':
+                # print("wall")
                 self.x, self.y = self.prevX, self.prevY
-            elif other.type == 'door' and other.isOpen:
-                # print(other.get_direction())
+            if other.type == 'door' and other.isOpen:
+                # print("door")
                 self.x, self.y = other.get_position()
-                print(self.x, self.y)
                 server.stage.enter_room(other.get_direction())
                     
         elif group == 'player:enemy' and self.hitCoolTime <= 0:

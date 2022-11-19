@@ -36,18 +36,22 @@ class Room:
         pass
     
     def update(self):
-        # print(game_world.objects[3])
         if game_world.objects[3] == []:
-            # print('clear')
-            # Room clear, open door
-            for object in self.objects:
-                if object.type == 'door':
-                    object.isOpen = True
+            # print('room update')
+            for o in self.objects:
+                if o.type == 'door':
+                    o.isOpen = True
             self.clear = True
             
         pass
     
     def set_room(self, room_type):
+        
+        # print(self.clear)
+        self.enemy = []
+        self.objects = []
+        
+        # print(room_type)
         for y in range(9):
             for x in range(15):
                 # self.grid[y][x] = room_type[y][x]
@@ -71,7 +75,7 @@ class Room:
                 elif room_type[y][x] == POOP:
                     self.objects.append(static.Poop(x, y))
                 
-                if self.clear == False:    
+                if self.clear == False:
                     if room_type[y][x] == FLY:
                         self.enemy.append(enemy.Fly(x, y))
                     elif room_type[y][x] == CHARGER:
@@ -85,11 +89,16 @@ class Room:
         game_world.add_objects(self.objects, 1)
         game_world.add_objects(self.enemy, 3)
         
+        # print(server.enemy)
+        # print(self.enemy)
+        
         game_world.add_collision_group(None, self.objects, 'player:room')
         game_world.add_collision_group(None, self.enemy, 'player:enemy')
         game_world.add_collision_group(self.objects, None, 'room:tears')
         game_world.add_collision_group(self.objects, self.enemy, 'room:enemy')
         game_world.add_collision_group(self.enemy, None, 'enemy:tears')
+        
+        print(server.objects)
     
             
     def draw_grid(self):
@@ -141,6 +150,7 @@ class Stage:
             game_world.remove_object(e)
         for o in self.stage[self.playerPos[0]][self.playerPos[1]].objects:
             game_world.remove_object(o)
+            
         server.objects = []
         server.enemy = []
             
@@ -153,8 +163,9 @@ class Stage:
         elif direction == 3: # South
             self.playerPos[0] += 1
         
-        print(self.playerPos)
+        # print(self.playerPos)
         self.stage[self.playerPos[0]][self.playerPos[1]].set_room(room_type.stage_01[self.playerPos[0]][self.playerPos[1]])
+        # print(self.stage[self.playerPos[0]][self.playerPos[1]].clear)
         
     def get_state(self):
         return self.get_stage()
