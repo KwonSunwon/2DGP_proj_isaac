@@ -3,6 +3,8 @@ from pico2d import *
 import player
 # import stage
 
+import server
+
 UI_SIZE = 64
 UI_FONT_SIZE = 50
 
@@ -52,6 +54,9 @@ class UI:
         self.stage = stage.get_stage() # get stage information from stage class
     
     def update(self):
+        self.heartState = server.player.get_heart()
+        self.keyState = server.player.get_key()
+        self.stage = server.stage.get_stage()
         pass
     
     def draw_hearts(self):

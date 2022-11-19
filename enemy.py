@@ -7,6 +7,8 @@ import random
 import game_framework
 import game_world
 
+import server
+
 from behavior_tree import BehaviorTree, SelectorNode, SequenceNode, LeafNode
 
 TIME_PER_ACTION = 0.5
@@ -113,7 +115,7 @@ class Fly(Enemy):
     
     def move_to_player(self):
         # print("Fly_move")
-        self.dir = math.atan2(game_world.objects[2][0].y - self.y, game_world.objects[2][0].x - self.x)
+        self.dir = math.atan2(server.player.y - self.y, server.player.x - self.x)
         return BehaviorTree.SUCCESS
     
     def build_behavior_tree(self):
@@ -254,14 +256,14 @@ class Charger(Enemy):
         return BehaviorTree.SUCCESS
     
     def find_player(self):
-        if self.x - 32 <= game_world.objects[2][0].x <= self.x + 32 and self.collision == False:
-            self.dir = BACK if game_world.objects[2][0].y > self.y else FRONT
+        if self.x - 32 <= server.player.x <= self.x + 32 and self.collision == False:
+            self.dir = BACK if server.player.y > self.y else FRONT
             self.rush = True
             self.wander_timer = 0.5
             self.speed = 0
             return BehaviorTree.SUCCESS
-        elif self.y - 32 <= game_world.objects[2][0].y <= self.y + 32 and self.collision == False:
-            self.dir = RIGHT if game_world.objects[2][0].x > self.x else LEFT
+        elif self.y - 32 <= server.player.y <= self.y + 32 and self.collision == False:
+            self.dir = RIGHT if server.player.x > self.x else LEFT
             self.rush = True
             self.wander_timer = 0.5
             self.speed = 0

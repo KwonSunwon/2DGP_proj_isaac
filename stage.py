@@ -9,6 +9,8 @@ import room_type
 import static
 import enemy
 
+import server
+
 width = 1440
 height = 864
 
@@ -28,6 +30,7 @@ class Room:
         self.objects = []
         self.enemy = []
         
+        self.clear = False        
     
     def add_event(self, event):
         pass
@@ -40,6 +43,8 @@ class Room:
             for object in self.objects:
                 if object.type == 'door':
                     object.isOpen = True
+            self.clear = True
+            
         pass
     
     def set_room(self, room_type):
@@ -65,12 +70,15 @@ class Room:
                     self.objects.append(static.Spike(x, y))
                 elif room_type[y][x] == POOP:
                     self.objects.append(static.Poop(x, y))
-                elif room_type[y][x] == FLY:
-                    self.enemy.append(enemy.Fly(x, y))
-                elif room_type[y][x] == CHARGER:
-                    self.enemy.append(enemy.Charger(x, y))
-                    
                 
+                if self.clear == False:    
+                    if room_type[y][x] == FLY:
+                        self.enemy.append(enemy.Fly(x, y))
+                    elif room_type[y][x] == CHARGER:
+                        self.enemy.append(enemy.Charger(x, y))
+                    
+        server.objects = self.objects
+        server.enemy = self.enemy
         game_world.add_objects(self.objects, 1)
         game_world.add_objects(self.enemy, 3)
 
@@ -89,8 +97,8 @@ class Room:
 class Stage:
     
     def __init__(self):
-        self.stage = [[None] * 10 for i in range(10)]
-        self.playerPos = [4, 4]
+        self.stage = [[None] * 5 for i in range(5)]
+        self.playerPos = [4, 2]
     
     def add_event(self, event):
         pass
@@ -106,10 +114,32 @@ class Stage:
         pass
     
     def set_stage(self):
-        self.stage[4][4] = Room()
-        self.stage[4][4].set_room(room_type.type_04)
+        self.playerPos = [4, 2]
+        for y in range(5):
+            for x in range(5):
+                if room_type.stage_01[y][x] != None:
+                    self.stage[y][x] = Room()
         
-
+        # print(self.stage)
+        self.stage[4][2].set_room(room_type.stage_01[4][2])
+        
+        # print(self.stage[self.playerPos[0]][self.playerPos[1]])
+        # self.stage[self.playerPos[0]][self.playerPos[1]].set_room(self.stage[self.playerPos[0]][self.playerPos[1]])
+        # self.stage[2][4] = Room()
+        # self.stage[2][4].set_room(room_type.type_04)
+        
+    def enter_room(self, direction):
+        if direction == NORTH:
+            self.playerPos[0] -= 1
+        elif direction == SOUTH:
+            self.playerPos[0] += 1
+        elif direction == EAST:
+            self.playerPos[1] += 1
+        elif direction == WEST:
+            self.playerPos[1] -= 1
+        
+        self.stage[self.playerPos[0]][self.playerPos[1]].set_room(self.stage[self.playerPos[0]][self.playerPos[1]].room_type)
+        
     def get_state(self):
         return self.get_stage()
 

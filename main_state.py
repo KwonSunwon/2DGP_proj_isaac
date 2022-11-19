@@ -6,28 +6,26 @@ from ui import UI
 from player import Player
 from stage import Stage
 
+import server
 
 name = "MainState"
-ui = None
-player = None
-stage = None
 
 def enter():
-    global ui, player, stage
-    player = Player()
-    stage = Stage()
-    stage.set_stage()
-    ui = UI()
+    server.player = Player()
+    server.stage = Stage()
+    server.ui = UI()
     
-    game_world.add_object(stage, 0)
-    game_world.add_object(player, 2)
-    game_world.add_object(ui, 5)
+    server.stage.set_stage()
+    
+    game_world.add_object(server.stage, 0)
+    game_world.add_object(server.player, 2)
+    game_world.add_object(server.ui, 5)
 
-    game_world.add_collision_group(player, game_world.objects[1], 'player:room')
-    game_world.add_collision_group(player, game_world.objects[3], 'player:enemy')
-    game_world.add_collision_group(game_world.objects[1], None, 'room:tears')
-    game_world.add_collision_group(game_world.objects[1], game_world.objects[3], 'room:enemy')
-    game_world.add_collision_group(game_world.objects[3], None, 'enemy:tears')
+    game_world.add_collision_group(server.player, server.objects, 'player:room')
+    game_world.add_collision_group(server.player, server.enemy, 'player:enemy')
+    game_world.add_collision_group(server.objects, None, 'room:tears')
+    game_world.add_collision_group(server.objects, server.enemy, 'room:enemy')
+    game_world.add_collision_group(server.enemy, None, 'enemy:tears')
     
 
 def exit():
@@ -51,15 +49,11 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         else:
-            player.handle_event(event)
+            server.player.handle_event(event)
     pass
 
 
 def update():
-    global ui
-    # UI로 상태 전달
-    ui.set_state(player, stage)
-    
     for game_objects in game_world.all_objects():
         game_objects.update()
     
