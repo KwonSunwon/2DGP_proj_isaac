@@ -216,15 +216,12 @@ class TrapDoor(Static):
         super().__init__(x, y)
         
         self.isOpen = True
-        self.frame = 0
-        
-    def update(self):
-        pass
-    
+
     def draw(self):
         if self.isOpen:
             self.image.clip_draw(0, 192, 64, 64, self.x + self.WIDTH//2, self.y + self.WIDTH//2, self.WIDTH + 96, self.HEIGHT + 96)
-
+        else:
+            self.image.clip_draw(0, 128, 64, 64, self.x + self.WIDTH//2, self.y + self.WIDTH//2, self.WIDTH + 96, self.HEIGHT + 96)
         draw_rectangle(*self.get_bb())
         pass
     

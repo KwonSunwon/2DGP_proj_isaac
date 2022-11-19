@@ -39,7 +39,7 @@ class Room:
         if game_world.objects[3] == []:
             # print('room update')
             for o in self.objects:
-                if o.type == 'door':
+                if o.type == 'door' or o.type == 'trapdoor':
                     o.isOpen = True
             self.clear = True
             
