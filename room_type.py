@@ -44,18 +44,18 @@ type_04 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WA
 
 type_05 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_BOSS, WALL, WALL,WALL, WALL, WALL, WALL, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
-            [WALL, None, CHARGER, None, None, None, None, None, None, None,None, None, CHARGER, None, WALL],
+            [WALL, None, CHARGER, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, ROCK, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, ROCK, ROCK, ROCK, ROCK, ROCK,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, ROCK, None, None,None, None, None, None, WALL],
-            [WALL, None, CHARGER, None, None, None, None, None, None, None,None, None, CHARGER, None, WALL],
+            [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WALL, WALL, WALL, WALL, WALL]]
 
 type_06 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WALL, WALL, WALL, WALL, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
-            [WALL, None, FLY, FLY, None, None, None, None, None, None,None, FLY, FLY, None, WALL],
-            [WALL, None, FLY, FLY, None, None, None, None, None, None,None, FLY, FLY, None, WALL],
+            [WALL, None, FLY, None, None, None, None, None, FLY, None,None, None, None, None, WALL],
+            [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
@@ -64,7 +64,7 @@ type_06 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WA
 
 type_07 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WALL, WALL, WALL, WALL, WALL],
             [WALL, JAR, JAR, None, None, None, None, None, None, None,None, None, JAR, JAR, WALL],
-            [WALL, JAR, JAR, None, None, None, None, None, None, None,None, None, JAR, JAR, WALL],
+            [WALL, JAR, JAR, None, None, None, MEAT, None, None, None,None, None, JAR, JAR, WALL],
             [WALL, JAR, JAR, None, None, None, None, None, None, None,None, None, JAR, JAR, WALL],
             [WALL, JAR, JAR, None, None, None, None, None, None, None,None, None, JAR, JAR, WALL],
             [WALL, JAR, JAR, None, None, None, None, None, None, None,None, None, JAR, JAR, WALL],
@@ -104,13 +104,13 @@ treasure =[[WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL,WALL, WAL
 
 # Stage 1
 stage_01 = [[None, None, type_boss, None, None],
+            [None, None, type_05, None, None],
             [None, None, type_07, None, None],
-            [None, None, type_07, None, None],
-            [None, None, type_07, None, None],
+            [None, None, type_06, None, None],
             [None, None, type_08, treasure, None]]
 
 stage_02 = [[None, None, type_boss, None, None],
             [None, None, type_07, None, None],
             [None, None, type_07, None, None],
             [None, None, type_05, None, None],
-            [None, None, start, treasure, None]]
+            [None, None, start, None, None]]
