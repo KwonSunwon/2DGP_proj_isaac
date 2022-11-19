@@ -174,6 +174,8 @@ class Meat(Enemy):
         if self.hp > 0:
             self.bt.run()
             
+            self.prevX, self.prevY = self.x, self.y
+            
             self.frame = (self.frame + self.FPA * 1.0 / self.TPA * game_framework.frame_time) % self.FPA
             self.x += self.speed * math.cos(self.dir) * game_framework.frame_time
             self.y += self.speed * math.sin(self.dir) * game_framework.frame_time
@@ -211,6 +213,7 @@ class Meat(Enemy):
     def wander(self):
         # print("Meat_wander")
         self.action = 'move'
+        self.speed = self.move_speed
         
         if self.frame >= self.FPA - 1:
             self.frame = 0
@@ -298,7 +301,8 @@ class Meat(Enemy):
     
     def handle_collision(self, other, group):
         if group == 'room:enemy':
-            print("Meat:handle_collision")
+            # print("Meat:handle_collision")
+            self.x, self.y = self.prevX, self.prevY
             self.speed = 0
         return super().handle_collision(other, group)
 
@@ -340,6 +344,8 @@ class Charger(Enemy):
     def update(self):
         if self.hp > 0:
             self.bt.run()
+            
+            self.prevX, self.prevY = self.x, self.y
             
             if self.dir == FRONT:
                 self.y -= self.speed * game_framework.frame_time
@@ -393,6 +399,7 @@ class Charger(Enemy):
             # print("charger collision")
             self.collision = True
             self.speed = 0
+            self.x, self.y = self.prevX, self.prevY
             return
         return super().handle_collision(other, group)
     

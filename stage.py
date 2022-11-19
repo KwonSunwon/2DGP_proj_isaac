@@ -98,7 +98,7 @@ class Room:
         game_world.add_collision_group(self.objects, self.enemy, 'room:enemy')
         game_world.add_collision_group(self.enemy, None, 'enemy:tears')
         
-        print(server.objects)
+        # print(server.objects)
     
             
     def draw_grid(self):
