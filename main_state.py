@@ -21,11 +21,11 @@ def enter():
     game_world.add_object(server.player, 2)
     game_world.add_object(server.ui, 5)
 
-    game_world.add_collision_group(server.player, server.objects, 'player:room')
-    game_world.add_collision_group(server.player, server.enemy, 'player:enemy')
-    game_world.add_collision_group(server.objects, None, 'room:tears')
-    game_world.add_collision_group(server.objects, server.enemy, 'room:enemy')
-    game_world.add_collision_group(server.enemy, None, 'enemy:tears')
+    game_world.add_collision_group(server.player, None, 'player:room')
+    game_world.add_collision_group(server.player, None, 'player:enemy')
+    game_world.add_collision_group(None, None, 'room:tears')
+    game_world.add_collision_group(None, None, 'room:enemy')
+    game_world.add_collision_group(None, None, 'enemy:tears')
     game_world.add_collision_group(server.player, None, 'player:bullet')
     
 

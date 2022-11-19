@@ -9,8 +9,6 @@ import room_type
 import static
 import enemy
 
-import server
-
 width = 1440
 height = 864
 
@@ -46,7 +44,6 @@ class Room:
         pass
     
     def set_room(self, room_type):
-        
         # print(self.clear)
         self.enemy = []
         self.objects = []
@@ -74,6 +71,8 @@ class Room:
                     self.objects.append(static.Spike(x, y))
                 elif room_type[y][x] == POOP:
                     self.objects.append(static.Poop(x, y))
+                elif room_type[y][x] == TABLE:
+                    self.objects.append(static.ItemTable(x, y))
                 
                 if self.clear == False:
                     if room_type[y][x] == FLY:
@@ -82,9 +81,6 @@ class Room:
                         self.enemy.append(enemy.Charger(x, y))
                     elif room_type[y][x] == MEAT:
                         self.enemy.append(enemy.Meat(x, y))
-                    
-        server.objects = self.objects
-        server.enemy = self.enemy
         
         game_world.add_objects(self.objects, 1)
         game_world.add_objects(self.enemy, 3)
@@ -98,6 +94,15 @@ class Room:
         game_world.add_collision_group(self.objects, self.enemy, 'room:enemy')
         game_world.add_collision_group(self.enemy, None, 'enemy:tears')
         
+        # for a, b, g in game_world.all_collision_pairs:
+        #     print(g, a, b)
+        
+        # print('game_world')
+        # print(game_world.objects[1])
+
+        # print('room')
+        # print(self.objects)
+        # print('room set')
         # print(server.objects)
     
             
@@ -137,8 +142,8 @@ class Stage:
             for x in range(5):
                 if room_type.stage_01[y][x] != None:
                     self.stage[y][x] = Room()
-        # print(self.stage)
-        self.stage[4][2].set_room(room_type.stage_01[4][2])
+        
+        self.stage[self.playerPos[0]][self.playerPos[1]].set_room(room_type.stage_01[self.playerPos[0]][self.playerPos[1]])
         
         # print(self.stage[self.playerPos[0]][self.playerPos[1]])
         # self.stage[self.playerPos[0]][self.playerPos[1]].set_room(self.stage[self.playerPos[0]][self.playerPos[1]])
@@ -153,9 +158,6 @@ class Stage:
         
         # Clear effects
         game_world.objects[4] = []
-        
-        server.objects = []
-        server.enemy = []
             
         if direction == 0: # North
             self.playerPos[0] -= 1
@@ -166,9 +168,7 @@ class Stage:
         elif direction == 3: # South
             self.playerPos[0] += 1
         
-        # print(self.playerPos)
-        self.stage[self.playerPos[0]][self.playerPos[1]].set_room(room_type.stage_01[self.playerPos[0]][self.playerPos[1]])
-        # print(self.stage[self.playerPos[0]][self.playerPos[1]].clear)
+        self.stage[self.playerPos[0]][self.playerPos[1]].set_room(room_type.stage_01[self.playerPos[0]][self.playerPos[1]])        
         
     def get_state(self):
         return self.get_stage()

@@ -194,10 +194,10 @@ class Door(Static):
             x = 720
             y = 165
         elif self.direction == 1:
-            x = 183
+            x = 1241
             y = 408
         elif self.direction == 2:
-            x = 1241
+            x = 183
             y = 408
         elif self.direction == 3:
             x = 720
@@ -227,3 +227,18 @@ class TrapDoor(Static):
     
     def get_bb(self):
         return self.x + 8, self.y + 8, self.x + self.WIDTH - 8, self.y + self.HEIGHT - 8
+
+
+class ItemTable(Static):
+    type = 'itemtable'
+    image = None
+    
+    def __init__(self, x, y):
+        if ItemTable.image == None:
+            ItemTable.image = pico2d.load_image('resources/objects/item_table.png')
+        super().__init__(x, y)    
+        
+    def draw(self):
+        self.image.clip_draw(0, 224, 32, 32, self.x + self.WIDTH//2, self.y + self.WIDTH//2, self.WIDTH + 4, self.HEIGHT + 4)
+        draw_rectangle(*self.get_bb())
+        pass
