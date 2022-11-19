@@ -15,7 +15,16 @@ ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRONT, BACK, LEFT, RIGHT = 0, 1, 2, 3
 
 class Enemy(Creature):
+    dead_effect = None
+    DEAD = ([0, 192], [64, 192], [128, 192], [192, 192],
+            [0, 128], [64, 128], [128, 128], [192, 128],
+            [0, 64], [64, 64], [128, 64], [192, 64])
+    
+    
     def __init__(self, x, y):
+        if Enemy.dead_effect == None:
+            Enemy.dead_effect = load_image('resources/effect/poof.png')
+        
         self.x = x * 87 + 64
         self.y = (8 - y) * 85 + 48
         self.dir = 0
@@ -159,7 +168,7 @@ class Charger(Enemy):
         self.frame = 0
         self.speed = 50
         self.wander_speed = 50
-        self.rush_speed = 500
+        self.rush_speed = 600
         self.dir = random.randint(0, 3)
         
         self.collision = False
@@ -188,6 +197,11 @@ class Charger(Enemy):
             
             self.frame = (self.frame + self.FPA_live * 1.0 / self.TPA_live * game_framework.frame_time) % self.FPA_live
 
+        elif self.hp == 0:
+            self.frame = (self.frame + 12 * 1.0 / 0.7 * game_framework.frame_time)
+            if self.frame >= 11:
+                self.hp = -1
+                game_world.remove_object(self)
         pass
 
     def draw(self):
@@ -210,7 +224,9 @@ class Charger(Enemy):
                     self.image.clip_composite_draw(32, 0, 32, 32, 0, 'h', self.x, self.y, self.draw_width, self.draw_height)
                 elif self.dir == RIGHT:
                     self.image.clip_draw(32, 0, 32, 32, self.x, self.y, self.draw_width, self.draw_height)
-                
+        elif self.hp == 0:
+            self.dead_effect.clip_draw(self.DEAD[int(self.frame)][0], self.DEAD[int(self.frame)][1], 64, 64, self.x, self.y, 96, 96)
+            
         draw_rectangle(*self.get_bb())
         pass
 
@@ -241,13 +257,13 @@ class Charger(Enemy):
         if self.x - 32 <= game_world.objects[2][0].x <= self.x + 32 and self.collision == False:
             self.dir = BACK if game_world.objects[2][0].y > self.y else FRONT
             self.rush = True
-            self.wander_timer = 1
+            self.wander_timer = 0.5
             self.speed = 0
             return BehaviorTree.SUCCESS
         elif self.y - 32 <= game_world.objects[2][0].y <= self.y + 32 and self.collision == False:
             self.dir = RIGHT if game_world.objects[2][0].x > self.x else LEFT
             self.rush = True
-            self.wander_timer = 1
+            self.wander_timer = 0.5
             self.speed = 0
             return BehaviorTree.SUCCESS
         return BehaviorTree.FAIL
