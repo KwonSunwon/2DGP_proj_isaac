@@ -150,7 +150,10 @@ class Stage:
             game_world.remove_object(e)
         for o in self.stage[self.playerPos[0]][self.playerPos[1]].objects:
             game_world.remove_object(o)
-            
+        
+        # Clear effects
+        game_world.objects[4] = []
+        
         server.objects = []
         server.enemy = []
             
