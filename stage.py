@@ -76,6 +76,8 @@ class Room:
                         self.enemy.append(enemy.Fly(x, y))
                     elif room_type[y][x] == CHARGER:
                         self.enemy.append(enemy.Charger(x, y))
+                    elif room_type[y][x] == MEAT:
+                        self.enemy.append(enemy.Meat(x, y))
                     
         server.objects = self.objects
         server.enemy = self.enemy

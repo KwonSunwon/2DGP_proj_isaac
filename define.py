@@ -12,3 +12,4 @@ POOP = 33
 
 FLY = 40
 CHARGER = 41
+MEAT = 42

@@ -86,6 +86,7 @@ class Fly(Enemy):
         pass
 
     def update(self):
+        # print(self.dir)
         self.bt.run()
         
         if self.hp > 0:
@@ -131,23 +132,166 @@ class Fly(Enemy):
 class Meat(Enemy):
     image = None
     
-    def __init__(self):
+    MOVE = ([0, 128], [64, 128], [128, 128], [192, 128],
+            [0, 64], [64, 64], [192, 64], 
+            [0, 128], [64, 128], [0, 128], [0, 128])
+    
+    ATTACK = ([0, 128], [0, 0], [64, 64], [128, 64],
+            [64, 64], [64, 0], [128, 0], [64, 128],
+            [0, 0], [0, 128], [0, 128])
+    
+    FPA = 11
+    TPA = 0.5
+    
+    width = 64
+    height = 64
+    
+    draw_width = 160
+    draw_height = 160
+    
+    def __init__(self, x, y):
         if Meat.image == None:
             Meat.image = load_image('./resources/monsters/meat.png')
+        
+        self.build_behavior_tree()
+        
+        super().__init__(x, y)
+        self.dir = random.random() * 2 * math.pi
+        self.move_speed = 100
+        self.speed = 0
+        self.frame = 0
+
+        self.hp = 6
+        
+        self.action = 'idle'
+        self.idle_timer = 1
         pass
 
     def add_event(self, event):
         pass
 
     def update(self):
+        self.bt.run()
+        
+        if self.hp >= 0:
+            self.frame = (self.frame + self.FPA * 1.0 / self.TPA * game_framework.frame_time) % self.FPA
+            self.x += self.speed * math.cos(self.dir) * game_framework.frame_time
+            self.y += self.speed * math.sin(self.dir) * game_framework.frame_time
+            
+        elif self.hp == 0:
+            self.frame = (self.frame + 12 * 1.0 / 0.7 * game_framework.frame_time)
+            if self.frame >= 11:
+                self.hp = -1
+                game_world.remove_object(self)
         pass
 
     def draw(self):
+        if abs(self.dir) >= 1.5:
+            look = 'h'
+        else:
+            look = ''
+
+        # print(type(self.MOVE))        
+        # print(int(self.frame))
+        if self.hp >= 0:
+            if self.action == 'idle':
+                self.image.clip_composite_draw(0, 128, 64, 64, 0, look, self.x, self.y, self.draw_width, self.draw_height)
+            elif self.action == 'move':
+                self.image.clip_composite_draw(self.MOVE[int(self.frame)][0], self.MOVE[int(self.frame)][1], 64, 64, 0, look, self.x, self.y, self.draw_width, self.draw_height)
+            elif self.action == 'attack':
+                self.image.clip_composite_draw(self.ATTACK[int(self.frame)][0], self.ATTACK[int(self.frame)][1], 64, 64, 0, look, self.x, self.y, self.draw_width, self.draw_height)
+            
+        elif self.hp == 0:
+            self.dead_effect.clip_draw(self.DEAD[int(self.frame)][0], self.DEAD[int(self.frame)][1], 64, 64, self.x, self.y, 96, 96)
+
+        draw_rectangle(*self.get_bb())
         pass
 
-    def handle_event(self, event):
-        pass
+    def wander(self):
+        # print("Meat_wander")
+        self.action = 'move'
+        self.speed = self.move_speed
+        
+        if self.frame >= self.FPA - 1:
+            self.frame = 0
+            return BehaviorTree.SUCCESS
+        return BehaviorTree.RUNNING
     
+    def idle(self):
+        # print("Meat_idle")
+        self.action = 'idle'
+        self.speed = 0
+        
+        self.idle_timer -= game_framework.frame_time
+        if self.idle_timer <= 0:
+            self.idle_timer = 1
+            self.frame = 0
+            self.dir = random.random() * 2 * math.pi
+            return BehaviorTree.SUCCESS
+        return BehaviorTree.RUNNING
+    
+    def attack(self):
+        # print("Meat_attack")
+        self.action = 'attack'
+        self.speed = 0
+        
+        if self.frame >= self.FPA - 1:
+            self.frame = 0
+            self.idle_timer = 1
+            return BehaviorTree.SUCCESS
+        return BehaviorTree.RUNNING
+    
+    def find_player(self):
+        # print("Meat_find_player")
+        self.speed = 0
+        if self.get_distance(server.player) < 200:
+            self.dir = math.atan2(server.player.y - self.y, server.player.x - self.x)
+            self.speed = self.move_speed
+            self.frame = 0
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.FAIL
+        
+    def move_to_player(self):
+        # print("Meat_move_to_player")
+        self.action = 'move'
+        
+        if self.frame >= self.FPA - 1:
+            self.frame = 0
+            return BehaviorTree.SUCCESS
+        return BehaviorTree.RUNNING
+
+    def build_behavior_tree(self):
+        # leaf
+        meat_wander_node = LeafNode("MeatWander", self.wander)
+        meat_idle_node = LeafNode("MeatIdle", self.idle)
+        meat_attack_node = LeafNode("MeatAttack", self.attack)
+        meat_find_player_node = LeafNode("MeatFindPlayer", self.find_player)
+        meat_move_to_player_node = LeafNode("MeatMoveToPlayer", self.move_to_player)
+        
+        # sequence
+        meat_patrol_node = SequenceNode("MeatPatrol")
+        meat_patrol_node.add_children(meat_wander_node, meat_attack_node)
+        
+        meat_find_attack_node = SequenceNode("MeatFindAttack")
+        meat_find_attack_node.add_children(meat_find_player_node, meat_move_to_player_node, meat_attack_node)
+        
+        # selector
+        meat_action_node = SelectorNode("MeatAction")
+        meat_action_node.add_children(meat_find_attack_node, meat_patrol_node)
+        
+        # root
+        meat_node = SequenceNode("Meat")
+        meat_node.add_children(meat_idle_node, meat_action_node)
+        
+        # init
+        self.bt = BehaviorTree(meat_node)
+        
+    def get_distance(self, player):
+        return math.sqrt((self.x - player.x) ** 2 + (self.y - player.y) ** 2)
+    
+    def get_bb(self):
+        return self.x - 32, self.y - 48, self.x + 32, self.y + 16
 
 class Charger(Enemy):
     type = 'charger'
@@ -308,11 +452,5 @@ class Charger(Enemy):
         charger_node.add_children(charger_attack_node, charger_wander_node)
         
         self.bt = BehaviorTree(charger_node)
-        
-    def get_bb(self):
-        if self.dir == FRONT or self.dir == BACK:
-            self.width, self.height = 32, 64
-        else:
-            self.width, self.height = 64, 32
-        return super().get_bb()        
+
 

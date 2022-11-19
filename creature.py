@@ -30,6 +30,8 @@ class Creature:
         pass
 
     def get_bb(self):
+        if self.hp <= 0:
+            return -100, -100, -100, -100
         return self.x - self.width // 2, self.y - self.height // 2, self.x + self.width // 2, self.y + self.height // 2
     
     def handle_collision(self, other, group):
