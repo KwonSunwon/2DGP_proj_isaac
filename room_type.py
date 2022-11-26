@@ -76,7 +76,7 @@ type_boss = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL,WALL, W
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, DOOR_TRAP, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
-            [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
+            [WALL, None, None, None, None, None, None, BABY_PLUM, None, None,None, None, None, None, DOOR_BOSS],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
@@ -86,7 +86,7 @@ type_08 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WA
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, None, POOP, None, SPIKE, None, ROCK, None, JAR, None,None, None, None, None, WALL],
             [WALL, None, POOP, None, SPIKE, None, ROCK, None, JAR, None,None, None, None, None, WALL],
-            [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, DOOR_TREASURE],
+            [DOOR_BOSS, None, None, None, None, None, None, None, None, None,None, None, None, None, DOOR_TREASURE],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
@@ -107,7 +107,7 @@ stage_01 = [[None, None, type_boss, None, None],
             [None, None, type_05, None, None],
             [None, None, type_07, None, None],
             [None, None, type_06, None, None],
-            [None, None, type_08, treasure, None]]
+            [None, type_boss, type_08, treasure, None]]
 
 stage_02 = [[None, None, type_boss, None, None],
             [None, None, type_07, None, None],

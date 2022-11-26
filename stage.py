@@ -8,6 +8,7 @@ import player
 import room_type
 import static
 import enemy
+import boss
 
 width = 1440
 height = 864
@@ -82,6 +83,9 @@ class Room:
                         self.enemy.append(enemy.Charger(x, y))
                     elif room_type[y][x] == MEAT:
                         self.enemy.append(enemy.Meat(x, y))
+                        
+                    elif room_type[y][x] == BABY_PLUM:
+                        self.enemy.append(boss.BabyPlum(x, y))
         
         game_world.add_objects(self.objects, 1)
         game_world.add_objects(self.enemy, 3)

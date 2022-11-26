@@ -28,7 +28,20 @@ class BabyPlum(Enemy):
     type = 'babyplum'
     image = None
     
-    IDLE = ([])
+    IDLE = ([0, 256], [256, 320])
+    SLAMS = ([])
+    
+    CLIP = {'idle' : IDLE, 'slams' : SLAMS}
+    FPA = {'idle' : 2, 'slams' : 0}
+    TPA = {'idle' : 0.2, 'slams' : 0.2}
+
+    CLIP_SIZE = 64
+    
+    draw_width = 192
+    draw_height = 192
+    
+    width = 128
+    height = 128
     
     def __init__(self, x, y):
         if BabyPlum.image == None:
@@ -41,15 +54,24 @@ class BabyPlum(Enemy):
         
         self.next_pattern = random.randint(0, 1)
         
+        self.action = 'idle'
+        self.idle_timer = 1
+        
         self.build_behavior_tree()
+
+        self.shadow.opacify(0.4)
         pass
     
     def update(self):
         self.bt.run()
         
+        self.frame = (self.frame + self.FPA[self.action] * 1.0 / self.TPA[self.action] * game_framework.frame_time) % self.FPA[self.action]
+        
         pass
     
     def draw(self):
+        self.shadow.draw(self.x, self.y - 64)
+        self.image.clip_draw(self.CLIP[self.action][int(self.frame)][0], self.CLIP[self.action][int(self.frame)][1], self.CLIP_SIZE, self.CLIP_SIZE, self.x, self.y, self.draw_width, self.draw_height)
         
         draw_rectangle(*self.get_bb())
         pass
@@ -83,7 +105,7 @@ class BabyPlum(Enemy):
         plum = SequenceNode("Plum")
         plum.add_children(plum_wander, plum_action_selector)
 
-        self.bt = BehaviorTree(self.root_node())
+        self.bt = BehaviorTree(plum)
         pass
     
     # behavior
