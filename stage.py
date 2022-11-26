@@ -34,7 +34,7 @@ class Room:
         pass
     
     def update(self):
-        if game_world.objects[3] == []:
+        if not game_world.objects[3]:
             # print('room update')
             for o in self.objects:
                 if o.type == 'door' or o.type == 'trapdoor':
@@ -75,7 +75,7 @@ class Room:
                     self.objects.append(static.ItemTable(x, y))
                 
                 # if not self.clear:
-                if self.clear == False:
+                if not self.clear:
                     if room_type[y][x] == FLY:
                         self.enemy.append(enemy.Fly(x, y))
                     elif room_type[y][x] == CHARGER:
