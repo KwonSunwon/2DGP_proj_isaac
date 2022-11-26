@@ -23,10 +23,13 @@ class Enemy(Creature):
             [0, 128], [64, 128], [128, 128], [192, 128],
             [0, 64], [64, 64], [128, 64], [192, 64])
     
+    shadow = None
     
     def __init__(self, x, y):
         if Enemy.dead_effect == None:
             Enemy.dead_effect = load_image('resources/effect/poof.png')
+        if Enemy.shadow == None:
+            Enemy.shadow = load_image('resources/effect/shadow.png')
         
         self.x = x * 87 + 64
         self.y = (8 - y) * 85 + 48
