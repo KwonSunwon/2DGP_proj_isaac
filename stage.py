@@ -74,6 +74,7 @@ class Room:
                 elif room_type[y][x] == TABLE:
                     self.objects.append(static.ItemTable(x, y))
                 
+                # if not self.clear:
                 if self.clear == False:
                     if room_type[y][x] == FLY:
                         self.enemy.append(enemy.Fly(x, y))
@@ -168,7 +169,8 @@ class Stage:
         
         # Clear effects
         game_world.objects[4] = []
-            
+        
+        # if direction == 'north':
         if direction == 0: # North
             self.playerPos[0] -= 1
         elif direction == 1: # West

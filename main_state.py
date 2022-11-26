@@ -15,6 +15,7 @@ def enter():
     server.stage = Stage()
     server.ui = UI()
     
+    # 레벨 숫자말고 문자열로 변경
     server.stage.set_stage(1)
     
     game_world.add_object(server.stage, 0)

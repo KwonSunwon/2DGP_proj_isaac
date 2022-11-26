@@ -5,6 +5,7 @@ import game_world
 FRONT, BACK, LEFT, RIGHT = 0b0001, 0b0010, 0b0100, 0b1000
 
 class Creature:
+    # 필요 없음 #########
     prevX, prevY = 0, 0
     x, y = 0, 0
     width, height = 0, 0
@@ -13,7 +14,8 @@ class Creature:
     frame = 0
     
     flying = False
-    
+    ####################
+
     def __init__(self):    
         pass
 
