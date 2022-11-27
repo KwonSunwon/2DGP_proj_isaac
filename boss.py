@@ -43,17 +43,21 @@ class BabyPlum(Enemy):
     width = 128
     height = 128
     
+    IDLE_SPEED = 100
+    
     def __init__(self, x, y):
         if BabyPlum.image == None:
             BabyPlum.image = load_image('resources/monsters/babyplum.png')
         super().__init__(x, y)
         
-        self.frame = 0
         self.hp = 20
+        
         self.speed = 100
+        self.direction = random.random() * 2 * math.pi
         
         self.next_pattern = random.randint(0, 1)
         
+        self.frame = 0
         self.action = 'idle'
         self.idle_timer = 1
         
@@ -110,7 +114,18 @@ class BabyPlum(Enemy):
     
     # behavior
     def wander(self):
-        pass
+        self.action = 'idle'
+        self.speed = self.IDLE_SPEED
+        
+        self.idle_timer -= game_framework.frame_time
+        
+        if self.idle_timer <= 0:
+            self.idle_timer -= game_framework.frame_time
+            self.idle_timer = 1
+            self.direction = random.random() * 2 * math.pi
+            self.next_pattern = random.randint(0, 1)
+            return BehaviorTree.SUCCESS
+        return BehaviorTree.RUNNING
     
     # pattern 1
     def short_dash(self):
