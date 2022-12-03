@@ -17,12 +17,31 @@ import math
 class Monstro(Enemy):
     type = 'monstro'
     image = None
+    
+    IDLE = ()
+    
+    CLIP = {'idle': IDLE}
 
     def __init__(self, x, y):
         if Monstro.image == None:
             Monstro.image = load_image('resources/monsters/monstro.png')
         super().__init__(x, y)
         
+    def update(self):
+        self.bt.run()
+    
+    def draw(self):
+        pass    
+        
+    def handle_collision(self, other, group):
+        return super().handle_collision(other, group)
+    
+    def build_behavior_tree(self):
+        
+        monstro = SequenceNode("Monstro")
+        
+        self.bt = BehaviorTree(monstro)
+
     
 class BabyPlum(Enemy):
     type = 'babyplum'
