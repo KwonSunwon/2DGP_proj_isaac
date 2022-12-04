@@ -68,9 +68,6 @@ def update():
 
 def draw():
     clear_canvas()
-    # stage.draw()
-    # ui.draw()
-    # player.draw()
     for game_objects in game_world.all_objects():
         game_objects.draw()
     update_canvas()
