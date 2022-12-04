@@ -21,7 +21,7 @@ ENEMY_BULLET = ([576, 448], [640, 448], [704, 448], [768, 448],
 class Tear(Creature):
     image = None
     
-    def __init__(self, x, y, direction, type):
+    def __init__(self, x, y, direction, type, speed = 600, live_range = 500):
         if Tear.image == None:
             Tear.image = load_image('resources/effect/bulletatlas.png')
 
@@ -35,26 +35,22 @@ class Tear(Creature):
         self.x, self.y = x, y + 16
         self.direction = direction
         self.hp = 1
-        self.speed = 600
+        self.speed = speed
         self.draw_width, self.draw_height = 64, 64
         self.width, self.height = 32, 32
+        self.live_range = live_range
         
         self.kill_frame = 0
         # print('Add Tear')
     
     def update(self):
         if self.hp == 1:
-            # if self.direction == FRONT:
-            #     self.y -= self.speed * game_framework.frame_time
-            # elif self.direction == BACK:
-            #     self.y += self.speed * game_framework.frame_time
-            # elif self.direction == LEFT:
-            #     self.x -= self.speed * game_framework.frame_time
-            # elif self.direction == RIGHT:
-            #     self.x += self.speed * game_framework.frame_time
-                
             self.x += self.speed * math.cos(self.direction) * game_framework.frame_time
             self.y += self.speed * math.sin(self.direction) * game_framework.frame_time
+
+            self.live_range -= game_framework.frame_time * self.speed
+            if self.live_range <= 0:
+                self.hp = 0
             
         elif self.hp == 0:
             if self.kill_frame >= 15:
@@ -63,8 +59,7 @@ class Tear(Creature):
                 
             self.kill_frame = self.kill_frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
             # print(self.kill_frame)
-        
-        
+            
     
     def draw(self):
         if self.hp == 1:
