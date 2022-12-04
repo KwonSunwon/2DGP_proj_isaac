@@ -297,7 +297,16 @@ class Player(Creature):
             # print("shootCoolTime : ", self.shootCoolTime)
             if self.shootCoolTime <= 0:
                 # print("shoot")
-                tear = Tear(self.x, self.y, self.lookHead, 0)
+                if self.lookHead == LEFT:
+                    tear_direction = pi
+                elif self.lookHead == RIGHT:
+                    tear_direction = 0.0
+                elif self.lookHead == FRONT:
+                    tear_direction = 3 * pi / 2
+                elif self.lookHead == BACK:
+                    tear_direction = pi / 2
+                    
+                tear = Tear(self.x, self.y, tear_direction, 0)
                 game_world.add_object(tear, 4)
                 game_world.add_collision_group(None, tear, 'room:tears')
                 game_world.add_collision_group(None, tear, 'enemy:tears')

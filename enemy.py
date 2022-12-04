@@ -319,7 +319,7 @@ class Meat(Enemy):
         return super().handle_collision(other, group)
     
     def shoot(self):
-        direction = [0b0001, 0b0010, 0b0100, 0b1000]
+        direction = [0.0, math.pi / 2, math.pi, math.pi * 3 / 2]
         tear = []
         for i in range(0, 4):
             tear.append(Tear(self.x, self.y - 16, direction[i], 1))

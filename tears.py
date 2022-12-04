@@ -44,14 +44,18 @@ class Tear(Creature):
     
     def update(self):
         if self.hp == 1:
-            if self.direction == FRONT:
-                self.y -= self.speed * game_framework.frame_time
-            elif self.direction == BACK:
-                self.y += self.speed * game_framework.frame_time
-            elif self.direction == LEFT:
-                self.x -= self.speed * game_framework.frame_time
-            elif self.direction == RIGHT:
-                self.x += self.speed * game_framework.frame_time
+            # if self.direction == FRONT:
+            #     self.y -= self.speed * game_framework.frame_time
+            # elif self.direction == BACK:
+            #     self.y += self.speed * game_framework.frame_time
+            # elif self.direction == LEFT:
+            #     self.x -= self.speed * game_framework.frame_time
+            # elif self.direction == RIGHT:
+            #     self.x += self.speed * game_framework.frame_time
+                
+            self.x += self.speed * math.cos(self.direction) * game_framework.frame_time
+            self.y += self.speed * math.sin(self.direction) * game_framework.frame_time
+            
         elif self.hp == 0:
             if self.kill_frame >= 15:
                 self.hp = -1
