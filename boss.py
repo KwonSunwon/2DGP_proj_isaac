@@ -100,7 +100,7 @@ class BabyPlum(Enemy):
             BabyPlum.image = load_image('resources/monsters/babyplum.png')
         super().__init__(x, y)
         
-        self.hp = 1
+        self.hp = 20
         
         self.speed = self.SPEED['idle']
         self.direction = random.random() * 2 * math.pi
