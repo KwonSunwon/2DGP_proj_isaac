@@ -172,7 +172,7 @@ class BabyPlum(Enemy):
         
         if int(self.frame) == 7 and not self.is_shoot:
             self.is_shoot = True
-            self.shoot_12way()
+            self.shoot(12)
             
         return BehaviorTree.RUNNING
     
@@ -182,11 +182,11 @@ class BabyPlum(Enemy):
         # self.speed = self.SPEED['pattern2']
         pass
     
-    def shoot_12way(self):
-        print('shoot')
+    def shoot(self, way):
+        # print('shoot')
         tears = []
-        step = 2 * math.pi / 12
-        for i in range(12):
+        step = 2 * math.pi / way
+        for i in range(way):
             tears.append(Tear(self.x, self.y, self.direction + step * i, 1))
         game_world.add_objects(tears, 4)
         game_world.add_collision_group(None, tears, 'player:bullet')
