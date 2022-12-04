@@ -98,7 +98,7 @@ class BabyPlum(Enemy):
         self.action = 'idle'
         self.idle_timer = 1
         
-        self.is_shoot = False
+        self.is_shoot = [False, False]
         
         self.build_behavior_tree()
 
@@ -203,7 +203,11 @@ class BabyPlum(Enemy):
             self.direction = random.random() * 2 * math.pi
             return BehaviorTree.SUCCESS
         
-        
+        if int(self.frame) == 19 and not self.is_shoot:
+            self.is_shoot = True
+            self.shoot(14)
+            self.shoot(8)
+
         return BehaviorTree.RUNNING
     
     def shoot(self, way):
