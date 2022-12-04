@@ -47,12 +47,22 @@ class BabyPlum(Enemy):
     type = 'babyplum'
     image = None
     
-    IDLE = ([0, 256], [256, 320])
-    SLAMS = ([])
+    ATTACK_LIST = ['pattern1', 'pattern2']
     
-    CLIP = {'idle' : IDLE, 'slams' : SLAMS}
-    FPA = {'idle' : 2, 'slams' : 0}
-    TPA = {'idle' : 0.2, 'slams' : 0.2}
+    IDLE = ([0, 256], [256, 320])
+    PATTERN1 = ([0, 256], [256, 320], [0, 128], [64, 128], [0, 128],
+                [64, 128], [64, 128], [128, 128], [192, 128], [256, 128],
+                [320, 128], [320, 128], [0, 64], [0, 64], [64, 64],
+                [64, 64], [128, 64], [192, 64], [256, 64], [192, 64],
+                [256, 64], [192, 64], [256, 64], [192, 64], [256, 64],
+                [192, 64], [256, 64], [192, 64], [256, 64], [192, 64],
+                [0, 256], [256, 320], [0, 256])
+    PATTERN2 = ()
+    
+    CLIP = {'idle' : IDLE, 'pattern1' : PATTERN1, 'pattern2' : PATTERN2}
+    FPA = {'idle' : 2, 'pattern1' : 33, 'pattern2' : 0}
+    TPA = {'idle' : 0.2, 'pattern1' : 1, 'pattern2' : 1}
+    SPEED = {'idle' : 100, 'pattern1' : 200, 'pattern2' : 0}    
 
     CLIP_SIZE = 64
     
@@ -62,7 +72,6 @@ class BabyPlum(Enemy):
     width = 128
     height = 128
     
-    IDLE_SPEED = 100
     
     def __init__(self, x, y):
         if BabyPlum.image == None:
@@ -71,7 +80,7 @@ class BabyPlum(Enemy):
         
         self.hp = 20
         
-        self.speed = 100
+        self.speed = self.SPEED['idle']
         self.direction = random.random() * 2 * math.pi
         
         self.next_pattern = random.randint(0, 1)
@@ -80,6 +89,8 @@ class BabyPlum(Enemy):
         self.action = 'idle'
         self.idle_timer = 1
         
+        self.is_shoot = False
+        
         self.build_behavior_tree()
 
         self.shadow.opacify(0.4)
@@ -87,6 +98,10 @@ class BabyPlum(Enemy):
     
     def update(self):
         self.bt.run()
+        
+        if self.hp:
+            self.x += self.speed * math.cos(self.direction) * game_framework.frame_time
+            self.y += self.speed * math.sin(self.direction) * game_framework.frame_time
         
         self.frame = (self.frame + self.FPA[self.action] * 1.0 / self.TPA[self.action] * game_framework.frame_time) % self.FPA[self.action]
         
@@ -100,25 +115,16 @@ class BabyPlum(Enemy):
         pass
     
     def handle_collision(self, other, group):
+        if group == 'room:enemy':
+            if other.type == 'wall' or other.type == 'door':
+                self.direction = (self.direction + math.pi)
+                return
         return super().handle_collision(other, group)
     
     def build_behavior_tree(self):
         plum_wander = LeafNode("PlumWander", self.wander)
-        
-        #pattern 1
-        plum_short_dash = LeafNode("PlumShortDash", self.short_dash)
-        plum_shoot_12way = LeafNode("PlumShoot12Way", self.shoot_12way)
-
-        plum_pattern1 = SequenceNode("PlumPattern1")
-        plum_pattern1.add_children(plum_short_dash, plum_shoot_12way)
-        
-        #pattern 2
-        plum_slams = LeafNode("PlumSlams", self.slams)
-        plum_shoot_8way = LeafNode("PlumShoot8Way", self.shoot_8way)
-        plum_shoot_14way = LeafNode("PlumShoot14Way", self.shoot_14way)
-        
-        plum_pattern2 = SequenceNode("PlumPattern2")
-        plum_pattern2.add_children(plum_slams, plum_shoot_8way, plum_shoot_14way)
+        plum_pattern1 = LeafNode("PlumPattern1", self.pattern1)
+        plum_pattern2 = LeafNode("PlumPattern2", self.pattern2)
         
         # selector
         plum_action_selector = SelectorNode("PlumActionSelector")
@@ -134,33 +140,55 @@ class BabyPlum(Enemy):
     # behavior
     def wander(self):
         self.action = 'idle'
-        self.speed = self.IDLE_SPEED
+        self.speed = self.SPEED['idle']
         
         self.idle_timer -= game_framework.frame_time
         
         if self.idle_timer <= 0:
             self.idle_timer -= game_framework.frame_time
             self.idle_timer = 1
-            self.direction = random.random() * 2 * math.pi
-            self.next_pattern = random.randint(0, 1)
+            self.next_pattern = random.choice(self.ATTACK_LIST)
+            self.direction = math.atan2(server.player.y - self.y, server.player.x - self.x)
+            self.is_shoot = False
             return BehaviorTree.SUCCESS
         return BehaviorTree.RUNNING
     
     # pattern 1
-    def short_dash(self):
+    def pattern1(self):
+        if self.next_pattern != 'pattern1':
+            return BehaviorTree.FAIL
+        
+        self.action = 'pattern1'
+        
+        if self.frame >= self.FPA[self.action] - 1:
+            self.frame = 0
+            self.direction = random.random() * 2 * math.pi
+            return BehaviorTree.SUCCESS
+        
+        if self.frame <= 7:
+            self.speed = 0
+        else:
+            self.speed = self.SPEED['pattern1']
+        
+        if int(self.frame) == 7 and not self.is_shoot:
+            self.is_shoot = True
+            self.shoot_12way()
+            
+        return BehaviorTree.RUNNING
+    
+    # pattern 2
+    def pattern2(self):
+        # self.action = 'pattern2'
+        # self.speed = self.SPEED['pattern2']
         pass
     
     def shoot_12way(self):
+        print('shoot')
+        tears = []
+        step = 2 * math.pi / 12
+        for i in range(12):
+            tears.append(Tear(self.x, self.y, self.direction + step * i, 1))
+        game_world.add_objects(tears, 4)
+        game_world.add_collision_group(None, tears, 'player:bullet')
+        game_world.add_collision_group(None, tears, 'room:tears')
         pass
-    
-    # pattern 2
-    def slams(self):
-        pass
-    
-    def shoot_8way(self):
-        pass
-    
-    def shoot_14way(self):
-        pass
-    
-    
