@@ -25,16 +25,39 @@ HEAD_GAP = 29
 
 HIT_CLIP_POS = ([128, 256])
 
+# Crop X, Y, Position X, Y, SCALE X, Y, ROTATE
+DEAD = ([0, 256, 0, 1, 1, 1, 0], [0, 256, 0, 1, 1, 1, 0], [0, 256, 0, 1, 1, 1, 0], [0, 256, 0, 2, 1.1, 0.9, 0], [0, 320, 0, 2, 1.2, 0.8, 0], 
+        [0, 320, 0, 2, 1.2, 0.8, 0], [0, 320, 0, 1, 0.8, 1.2, 0], [0, 320, 0, 1, 0.8, 1.2, 0], [128, 256, 0, 1, 0.8, 1.2, 0], [128, 256, 0, 1, 0.8, 1.2, 0],
+        [128, 256, 4, 1, 1, 1, 16], [128, 256, 4, 1, 1, 1, 35], [192, 320, 21, 5, 1.1, 0.9, 0], [192, 320, 21, 5, 1.1, 0.9, 0], [192, 320, 21, 5, 1, 1, 0],
+        [192, 320, 19, 5, 1, 1, 0], [192, 320, 21, 5, 1, 1, 0], [192, 320, 19, 5, 1, 1, 0], [192, 320, 21, 5, 1, 1, 0], [192, 320, 19, 5, 1, 1, 0],
+        [192, 320, 21, 5, 1, 1, 0], [192, 320, 20, 5, 1, 1, 0])
+# Crop X, Y, Position X, Y, SCALE X, Y, OPACITY
+GHOST = ([0, 16, 22, 19, 1, 1, 0], [0, 16, 22, 19, 1, 1, 0], [0, 16, 22, 19, 1, 1, 0], [32, 16, 25, 30, 0.9, 1.1, 0.4], [32, 16, 25, 30, 0.9, 1.1, 0.4],
+        [32, 16, 25, 30, 0.9, 1.1, 0.4], [64, 16, 25, 41, 1, 1.1, 0.6], [64, 16, 25, 41, 1, 1.1, 0.6], [64, 16, 25, 41, 1, 1.1, 0.6], [96, 16, 22, 53, 1.1, 0.9, 0.6],
+        [96, 16, 22, 53, 1.1, 0.9, 0.6], [96, 16, 22, 53, 1.1, 0.9, 0.6], [128, 16, 18, 65, 1, 1, 0.6], [128, 16, 18, 65, 1, 1, 0.6], [128, 16, 18, 65, 1, 1, 0.6],
+        [0, 16, 18, 78, 1, 1, 0.6], [0, 16, 18, 78, 1, 1, 0.6], [32, 16, 16, 86, 0.9, 1.1, 0.6], [32, 16, 16, 86, 0.9, 1.1, 0.6], [64, 16, 18, 94, 1, 1, 0.6],
+        [64, 16, 18, 94, 1, 1, 0.6], [96, 16, 21, 103, 1.1, 0.9, 0.6], [96, 16, 21, 103, 1.1, 0.9, 0.6], [128, 16, 23, 111, 1, 1, 0.6], [128, 16, 23, 111, 1, 1, 0.6],
+        [0, 16, 19, 117, 1, 1, 0.45], [0, 16, 19, 117, 1, 1, 0.45], [32, 16, 16, 124, 0.9, 1.1, 0.35], [32, 16, 16, 124, 0.9, 1.1, 0.35], [64, 16, 18, 136, 1, 1, 0.23],
+        [64, 16, 18, 136, 1, 1, 0.23], [96, 16, 26, 144, 1.1, 0.9, 0.11], [96, 16, 26, 144, 1.1, 0.9, 0.11], [128, 16, 18, 180, 1, 1, 0], [128, 16, 18, 180, 1, 1, 0])
+
+CLIP_DEAD = {'body': DEAD, 'ghost': GHOST}
+CLIP_SIZE_DEAD = 64
+FPA = {'body': len(DEAD), 'ghost': len(GHOST)}
+TPA = {'body': 0.5, 'ghost': 0.5}
+
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAME_PER_ACTION = 10
 
 class Player(Creature):
     image = None
+    image_ghost = None
     
     def __init__(self):
         if Player.image == None:
-            self.image = load_image('./resources/character.png')
+            Player.image = load_image('./resources/character.png')
+        if Player.image_ghost == None:
+            Player.image_ghost = load_image('./resources/ghost.png')
         
         self.lookHead = FRONT
         self.lookBody = FRONT
@@ -70,28 +93,47 @@ class Player(Creature):
         pass
 
     def update(self):
-        ### Move body ###
-        self.update_body()
-        ### Move head ###
-        self.update_head()
-    
-        self.frame = (self.frame + FRAME_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10   
-    
-        if self.hitCoolTime > 0:
-            self.hitCoolTime -= 1000 * game_framework.frame_time / 2
-        # print("shootFrame : ", self.shootFrame)
-        
-        # self.shootFrame = (self.shootFrame + (FRAME_PER_ACTION * self.shootSpeed)* ACTION_PER_TIME * game_framework.frame_time) % 200
-        # if self.directionAttack == IDLE:
-            # self.shootFrame = 0
+        if self.hp > 0:
+            self.update_body()
+            self.update_head()
+            self.frame = (self.frame + FRAME_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10   
+            if self.hitCoolTime > 0:
+                self.hitCoolTime -= 1000 * game_framework.frame_time / 2
+        elif self.hp == 0:
+            self.frame = self.frame + FRAME_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
+            if self.frame >= FPA['body'] + FPA['ghost'] - 1:
+                self.hp = -1
+                # game_framework.change_state(game_over_state)
     
     def draw(self):
-        if self.hitCoolTime <= 0:
-            self.image.opacify(1)
-            self.draw_body()
-            self.draw_head()
-        elif self.hitCoolTime > 0:
-            self.draw_hit()
+        if self.hp > 0:
+            if self.hitCoolTime <= 0:
+                self.image.opacify(1)
+                self.draw_body()
+                self.draw_head()
+            elif self.hitCoolTime > 0:
+                self.draw_hit()
+        elif self.hp == 0:
+            frame_ghost = int(self.frame)
+            frame_body = clamp(0, int(self.frame), len(DEAD) - 1)
+            self.image.clip_composite_draw(CLIP_DEAD['body'][frame_body][0],
+                                            CLIP_DEAD['body'][frame_body][1],
+                                            CLIP_SIZE_DEAD, CLIP_SIZE_DEAD,
+                                            CLIP_DEAD['body'][frame_body][6] * pi / 180, ' ',
+                                            self.x + CLIP_DEAD['body'][frame_body][2],
+                                            self.y + CLIP_DEAD['body'][frame_body][3],
+                                            int(160 * CLIP_DEAD['body'][frame_body][4]),
+                                            int(160 * CLIP_DEAD['body'][frame_body][5]))
+            if frame_ghost >= 22:
+                frame_ghost -= 22
+                self.image_ghost.opacify(CLIP_DEAD['ghost'][frame_ghost][6])
+                self.image_ghost.clip_draw(CLIP_DEAD['ghost'][frame_ghost][0],
+                                            CLIP_DEAD['ghost'][frame_ghost][1],
+                                            32, 48,
+                                            self.x + CLIP_DEAD['ghost'][frame_ghost][2],
+                                            self.y + CLIP_DEAD['ghost'][frame_ghost][3],
+                                            int(IMAGE_SIZE * CLIP_DEAD['ghost'][frame_ghost][4]),
+                                            int(IMAGE_SIZE * CLIP_DEAD['ghost'][frame_ghost][5]))
             
         draw_rectangle(*self.get_bb())
         
