@@ -36,10 +36,14 @@ def exit():
 
 
 def pause():
+    print('main_state pause')
     pass
 
 
 def resume():
+    print('main_state resume')
+    for o in game_world.all_objects():
+        print(o)
     pass
 
 
@@ -50,6 +54,9 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_1:
+            for o in game_world.all_objects():
+                print(o)
         else:
             server.player.handle_event(event)
     pass

@@ -42,20 +42,20 @@ class UI:
             self.font = load_font('./resources/DungGeunMo.ttf', UI_FONT_SIZE)
         
         self.heartState = None # get heart information from character class
-        self.keyState = None # get key information from character class
+        # self.keyState = None # get key information from character class
         self.stage = None # get stage information from stage class
         
     def add_event(self, event):
         pass
     
-    def set_state(self, player, stage):
-        self.heartState = player.get_heart() # get heart information from character class
-        self.keyState = player.get_key() # get key information from character class
-        self.stage = stage.get_stage() # get stage information from stage class
+    # def set_state(self, player, stage):
+    #     self.heartState = player.get_heart() # get heart information from character class
+    #     self.keyState = player.get_key() # get key information from character class
+    #     self.stage = stage.get_stage() # get stage information from stage class
     
     def update(self):
         self.heartState = server.player.get_heart()
-        self.keyState = server.player.get_key()
+        # self.keyState = server.player.get_key()
         self.stage = server.stage.get_stage()
         pass
     
@@ -83,8 +83,8 @@ class UI:
     
     def draw(self):
         self.draw_hearts()
-        self.draw_minimap()
-        self.draw_key()
+        # self.draw_minimap()
+        # self.draw_key()
         pass
         
     def handle_event(self, event):

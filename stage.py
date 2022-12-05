@@ -1,6 +1,7 @@
 from cmath import pi
 from pico2d import *
 import game_world
+import game_framework
 
 from define import *
 
@@ -9,6 +10,8 @@ import room_type
 import static
 import enemy
 import boss
+
+import stage_change_state as StageChangeState
 
 width = 1440
 height = 864
@@ -123,8 +126,13 @@ class Room:
 
 
 class Stage:
+    bgm_caves = None
     
     def __init__(self):
+        if Stage.bgm_caves == None:
+            Stage.bgm_caves = load_music('resources/sfx/bgm_caves.ogg')
+            Stage.bgm_caves.set_volume(5)
+            
         self.stage = [[None] * 5 for i in range(5)]
         self.playerPos = [4, 2]
         self.level = 1
@@ -144,6 +152,7 @@ class Stage:
     
     def set_stage(self, level):
         # print(level)
+        Stage.bgm_caves.repeat_play()
 
         self.playerPos = [4, 2]
         self.stage.clear()
@@ -197,12 +206,20 @@ class Stage:
         return self.stage[self.playerPos[0]][self.playerPos[1]].objects
 
     def changeStage(self, level):
+        Stage.bgm_caves.stop()
+        print('bgm stop')
+        
+        game_framework.push_state(StageChangeState)
+        print('push state')
+        
         for e in self.stage[self.playerPos[0]][self.playerPos[1]].enemy:
             game_world.remove_object(e)
         for o in self.stage[self.playerPos[0]][self.playerPos[1]].objects:
             game_world.remove_object(o)
         game_world.objects[4] = []
+        print('remove objects')
         
         self.level = level
         # print(self.level)
         self.set_stage(self.level)
+        print('set stage')

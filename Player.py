@@ -82,8 +82,6 @@ class Player(Creature):
         
         self.x = 720
         self.y = 408
-        # self.x = 720
-        # self.y = 715
 
         self.height = 96
         self.width = 96
@@ -383,3 +381,11 @@ class Player(Creature):
             self.shootFrame -= 1000 * game_framework.frame_time / 2
         pass
     ##############################
+    
+    def state_clear(self):
+        self.directionMove = IDLE
+        self.directionAttack = IDLE
+        self.hitCoolTime = 0
+        self.shootCoolTime = 0
+        
+        
