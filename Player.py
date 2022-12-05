@@ -53,11 +53,23 @@ class Player(Creature):
     image = None
     image_ghost = None
     
+    sfx = {'hit': None, 'dead': None, 'shoot': None}
+    
     def __init__(self):
         if Player.image == None:
             Player.image = load_image('./resources/character.png')
         if Player.image_ghost == None:
             Player.image_ghost = load_image('./resources/ghost.png')
+        
+        if Player.sfx['dead'] == None:
+            Player.sfx['dead'] = load_wav('./resources/sfx/player_dies.wav')
+            Player.sfx['dead'].set_volume(10)
+        if Player.sfx['hit'] == None:
+            Player.sfx['hit'] = load_wav('./resources/sfx/player_hit.wav')
+            Player.sfx['hit'].set_volume(10)    
+        if Player.sfx['shoot'] == None:
+            Player.sfx['shoot'] = load_wav('./resources/sfx/player_shoot.wav')
+            Player.sfx['shoot'].set_volume(7)
         
         self.lookHead = FRONT
         self.lookBody = FRONT
@@ -101,6 +113,9 @@ class Player(Creature):
                 self.hitCoolTime -= 1000 * game_framework.frame_time / 2
         elif self.hp == 0:
             self.frame = self.frame + FRAME_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
+            if int(self.frame) == 10:
+                Player.sfx['dead'].play()
+            
             if self.frame >= FPA['body'] + FPA['ghost'] - 1:
                 self.hp = -1
                 # game_framework.change_state(game_over_state)
@@ -222,6 +237,7 @@ class Player(Creature):
                     self.x, self.y = self.prevX, self.prevY
             
             elif other.type == 'spike' and self.hitCoolTime <= 0:
+                Player.sfx['hit'].play()
                 self.hp -= 1
                 self.hitCoolTime = 250
                 self.frame = 0
@@ -236,6 +252,7 @@ class Player(Creature):
                 pass
                     
         elif group == 'player:enemy' and self.hitCoolTime <= 0:
+            Player.sfx['hit'].play()
             self.hp -= 1
             self.hitCoolTime = 250
             self.frame = 0
@@ -243,6 +260,7 @@ class Player(Creature):
                 # game_framework.change_state(static.game_over)
                 pass
         elif group == 'player:bullet':
+            Player.sfx['hit'].play()
             self.hp -= 1
             self.hitCoolTime = 250
             self.frame = 0
@@ -352,6 +370,8 @@ class Player(Creature):
                 game_world.add_object(tear, 4)
                 game_world.add_collision_group(None, tear, 'room:tears')
                 game_world.add_collision_group(None, tear, 'enemy:tears')
+                
+                Player.sfx['shoot'].play()
                 
                 self.shootCoolTime = self.shootSpeed * 50
                 self.shootFrame = 100
