@@ -87,7 +87,7 @@ class Tear(Creature):
         if group == 'room:tears':
             if other.type == 'poop' and other.hp > 0:
                 self.hp = 0
-            elif other.type != 'poop':
+            elif other.type != 'poop' and other.type != 'spike':
                 self.hp = 0
         elif group == 'enemy:tears':
             self.hp = 0
