@@ -20,11 +20,15 @@ ENEMY_BULLET = ([576, 448], [640, 448], [704, 448], [768, 448],
 
 class Tear(Creature):
     image = None
+    sfx = None
     
     def __init__(self, x, y, direction, type, speed = 600, live_range = 500):
         if Tear.image == None:
             Tear.image = load_image('resources/effect/bulletatlas.png')
-
+        if Tear.sfx == None:
+            Tear.sfx = load_wav('resources/sfx/tear_pop.wav')
+            Tear.sfx.set_volume(10)
+            
         # game_world.add_collision_group(None, self, 'room:tears')
         # game_world.add_collision_group(None, self, 'enemy:tears')
 
@@ -41,6 +45,8 @@ class Tear(Creature):
         self.live_range = live_range
         
         self.kill_frame = 0
+        
+        self.pop = False
         # print('Add Tear')
     
     def update(self):
@@ -53,13 +59,15 @@ class Tear(Creature):
                 self.hp = 0
             
         elif self.hp == 0:
+            if not self.pop:
+                Tear.sfx.play()
+                self.pop = True
             if self.kill_frame >= 15:
                 self.hp = -1
                 game_world.remove_object(self)
                 
             self.kill_frame = self.kill_frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
             # print(self.kill_frame)
-            
     
     def draw(self):
         if self.hp == 1:
