@@ -94,10 +94,14 @@ class Spike(Static):
 class Poop(Static):
     type = 'poop'
     image = None
+    sfx = None
     
     def __init__(self, x, y):
         if Poop.image == None:
             Poop.image = pico2d.load_image('resources/objects/poop.png')
+        if Poop.sfx == None:
+            Poop.sfx = pico2d.load_wav('resources/sfx/poop_plop.wav')
+            Poop.sfx.set_volume(10)
         super().__init__(x, y)
         self.hp = 4
         
@@ -108,6 +112,8 @@ class Poop(Static):
     def handle_collision(self, other, group):
         if group == 'room:tears' and self.hp > 0:
             self.hp -= 1
+            if self.hp == 0:
+                self.sfx.play()
     pass
 
 # Normal Door 21
