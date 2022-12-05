@@ -3,6 +3,8 @@ from creature import Creature
 import game_framework
 import game_world
 
+import game_over_state
+
 from math import pi
 
 from tears import Tear
@@ -63,7 +65,7 @@ class Player(Creature):
         
         if Player.sfx['dead'] == None:
             Player.sfx['dead'] = load_wav('./resources/sfx/player_dies.wav')
-            Player.sfx['dead'].set_volume(10)
+            Player.sfx['dead'].set_volume(4)
         if Player.sfx['hit'] == None:
             Player.sfx['hit'] = load_wav('./resources/sfx/player_hit.wav')
             Player.sfx['hit'].set_volume(10)    
@@ -116,7 +118,8 @@ class Player(Creature):
             
             if self.frame >= FPA['body'] + FPA['ghost'] - 1:
                 self.hp = -1
-                # game_framework.change_state(game_over_state)
+                server.stage.bgm_caves.stop()
+                game_framework.change_state(game_over_state)
     
     def draw(self):
         if self.hp > 0:
