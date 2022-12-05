@@ -19,10 +19,10 @@ FRONT, BACK, LEFT, RIGHT = 0, 1, 2, 3
 
 class Enemy(Creature):
     dead_effect = None
+    dead_sfx = None
     DEAD = ([0, 192], [64, 192], [128, 192], [192, 192],
             [0, 128], [64, 128], [128, 128], [192, 128],
             [0, 64], [64, 64], [128, 64], [192, 64])
-    
     shadow = None
     
     def __init__(self, x, y):
@@ -30,6 +30,10 @@ class Enemy(Creature):
             Enemy.dead_effect = load_image('resources/effect/poof.png')
         if Enemy.shadow == None:
             Enemy.shadow = load_image('resources/effect/shadow.png')
+        
+        if Enemy.dead_sfx == None:
+            Enemy.dead_sfx = load_wav('resources/sfx/enemy_dies.wav')
+            Enemy.dead_sfx.set_volume(10)
         
         self.x = x * 87 + 64
         self.y = (8 - y) * 85 + 48
@@ -59,6 +63,8 @@ class Enemy(Creature):
 class Fly(Enemy):
     type = 'fly'
     image = None
+    sfx_fly = None
+    sfx_timer = 0
     
     live_pos = ([0, 192], [32, 192], [64, 192], [96, 192])
     die_pos = ([0, 128], [64,128], [128, 128], [192, 128],
@@ -78,6 +84,9 @@ class Fly(Enemy):
     def __init__(self, x, y):
         if Fly.image == None:
             Fly.image = load_image('./resources/monsters/fly.png')
+        if Fly.sfx_fly == None:
+            Fly.sfx_fly = load_wav('./resources/sfx/enemy_fly.wav')
+            Fly.sfx_fly.set_volume(2)
         super().__init__(x, y)
         self.hp = 2
         self.frame = 0
@@ -98,8 +107,16 @@ class Fly(Enemy):
             self.y += self.speed * math.sin(self.dir) * game_framework.frame_time
             
             self.frame = (self.frame + self.FPA_live * 1.0 / self.TPA_live * game_framework.frame_time) % self.FPA_live
+
+            Fly.sfx_timer -= game_framework.frame_time
+            if Fly.sfx_timer <= 0:
+                Fly.sfx_fly.play()
+                Fly.sfx_timer = 0.7
             
         elif self.hp == 0:
+            if self.frame == 0:
+                Enemy.dead_sfx.set_volume(3)
+                Enemy.dead_sfx.play()
             self.frame = (self.frame + self.FPA_die * 1.0 / self.TPA_die * game_framework.frame_time) % self.FPA_die
             if self.frame >= 11:
                 self.hp = -1
@@ -135,6 +152,7 @@ class Fly(Enemy):
 
 class Meat(Enemy):
     image = None
+    sfx = {'jump': None, 'impact': None}
     
     MOVE = ([0, 128], [64, 128], [128, 128], [192, 128],
             [0, 64], [64, 64], [192, 64], 
@@ -156,6 +174,10 @@ class Meat(Enemy):
     def __init__(self, x, y):
         if Meat.image == None:
             Meat.image = load_image('./resources/monsters/meat.png')
+            
+        if Meat.sfx['impact'] == None:
+            Meat.sfx['impact'] = load_wav('./resources/sfx/enemy_meat_impact.wav')
+            Meat.sfx['impact'].set_volume(5)
         
         self.build_behavior_tree()
         
@@ -186,7 +208,13 @@ class Meat(Enemy):
             self.x += self.speed * math.cos(self.dir) * game_framework.frame_time
             self.y += self.speed * math.sin(self.dir) * game_framework.frame_time
             
+            if int(self.frame) == 9 and self.action == 'attack':
+                self.sfx['impact'].play()
+            
         elif self.hp == 0:
+            if self.frame == 0:
+                Enemy.dead_sfx.set_volume(5)
+                Enemy.dead_sfx.play()
             self.frame = (self.frame + 12 * 1.0 / 0.7 * game_framework.frame_time)
             # print(self.frame)
             if self.frame >= 11:
@@ -331,6 +359,7 @@ class Meat(Enemy):
 class Charger(Enemy):
     type = 'charger'
     image = None
+    sfx = None
     
     FPA_live = 4
     TPA_live = 0.8
@@ -343,7 +372,10 @@ class Charger(Enemy):
     
     def __init__(self, x, y):
         if Charger.image == None:
-            self.image = load_image('./resources/monsters/charger.png')
+            Charger.image = load_image('./resources/monsters/charger.png')
+        if Charger.sfx == None:
+            Charger.sfx = load_wav('./resources/sfx/enemy_charger.wav')
+            Charger.sfx.set_volume(10)
         super().__init__(x,y)
         self.hp = 5
         self.frame = 0
@@ -354,6 +386,7 @@ class Charger(Enemy):
         
         self.collision = False
         self.rush = False
+        self.sfx_rush_played = False
         
         self.wander_timer = 2
         
@@ -380,7 +413,14 @@ class Charger(Enemy):
             
             self.frame = (self.frame + self.FPA_live * 1.0 / self.TPA_live * game_framework.frame_time) % self.FPA_live
 
+            if self.rush and self.sfx_rush_played == False:
+                Charger.sfx.play()
+                self.sfx_rush_played = True
+
         elif self.hp == 0:
+            if self.frame == 0:
+                Enemy.dead_sfx.set_volume(7)
+                Enemy.dead_sfx.play()
             self.frame = (self.frame + 12 * 1.0 / 0.7 * game_framework.frame_time)
             if self.frame >= 11:
                 self.hp = -1
@@ -473,6 +513,7 @@ class Charger(Enemy):
             self.speed = self.wander_speed
             self.wander_timer = 2
             self.rush = False
+            self.sfx_rush_played = False
             return BehaviorTree.SUCCESS
         else:
             return BehaviorTree.RUNNING
