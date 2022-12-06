@@ -22,6 +22,7 @@ def enter():
     server.death_sfx.play()
 
 def exit():
+    server.player.state_clear()
     game_world.clear()
     pass
 

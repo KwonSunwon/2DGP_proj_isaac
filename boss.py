@@ -398,7 +398,7 @@ class BabyPlum(Enemy):
         if BabyPlum.image == None:
             BabyPlum.image = load_image('resources/monsters/babyplum.png')
         if BabyPlum.sfx == None:
-            BabyPlum.sfx = load_wav('resources/sfx/boos2_shoot.wav')
+            BabyPlum.sfx = load_wav('resources/sfx/boss2_shoot.wav')
             BabyPlum.sfx.set_volume(20)
         super().__init__(x, y)
         
@@ -558,4 +558,3 @@ class BabyPlum(Enemy):
         game_world.add_objects(tears, 4)
         game_world.add_collision_group(None, tears, 'player:bullet')
         game_world.add_collision_group(None, tears, 'room:tears')
-        pass

@@ -17,6 +17,7 @@ def enter():
         server.clear_font = load_font('./resources/DungGeunMo.ttf', 180)
 
 def exit():
+    server.player.state_clear()
     game_world.clear()
     pass
 
