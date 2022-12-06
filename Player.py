@@ -130,7 +130,7 @@ class Player(Creature):
                 self.draw_head()
             elif self.hitCoolTime > 0:
                 self.draw_hit()
-        elif self.hp == 0:
+        elif self.hp <= 0:
             frame_ghost = int(self.frame)
             frame_body = clamp(0, int(self.frame), len(DEAD) - 1)
             self.image.clip_composite_draw(CLIP_DEAD['body'][frame_body][0],

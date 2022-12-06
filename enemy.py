@@ -88,7 +88,7 @@ class Fly(Enemy):
             Fly.sfx_fly = load_wav('./resources/sfx/enemy_fly.wav')
             Fly.sfx_fly.set_volume(2)
         super().__init__(x, y)
-        self.hp = 2
+        self.hp = 1
         self.frame = 0
         self.speed = 100
         
@@ -187,7 +187,7 @@ class Meat(Enemy):
         self.speed = 0
         self.frame = 0
 
-        self.hp = 6
+        self.hp = 2
         
         self.action = 'idle'
         self.idle_timer = 1
@@ -377,7 +377,7 @@ class Charger(Enemy):
             Charger.sfx = load_wav('./resources/sfx/enemy_charger.wav')
             Charger.sfx.set_volume(10)
         super().__init__(x,y)
-        self.hp = 5
+        self.hp = 2
         self.frame = 0
         self.speed = 50
         self.wander_speed = 50

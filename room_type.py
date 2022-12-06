@@ -72,7 +72,7 @@ start_02 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL,WALL, WA
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL,WALL, WALL, WALL, WALL, WALL]]
 
-s2_1 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, DOOR_NORMAL, WALL, WALL,WALL, WALL, WALL, WALL, WALL],
+s2_1 = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL,WALL, WALL, WALL, WALL, WALL],
             [WALL, None, None, None, None, None, ROCK, ROCK, ROCK, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, ROCK, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, POOP, None, None,None, None, None, None, WALL],
