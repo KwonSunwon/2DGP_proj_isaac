@@ -89,6 +89,10 @@ class Room:
                         
                     elif room_type[y][x] == BABY_PLUM:
                         self.enemy.append(boss.BabyPlum(x, y))
+                    elif room_type[y][x] == HEADLESS_HEAD:
+                        self.enemy.append(boss.Head(x, y))
+                    elif room_type[y][x] == HEADLESS_BODY:
+                        self.enemy.append(boss.Body(x, y))
         
         game_world.add_objects(self.objects, 1)
         game_world.add_objects(self.enemy, 3)

@@ -13,34 +13,315 @@ from behavior_tree import BehaviorTree, SelectorNode, SequenceNode, LeafNode
 import random
 import math
 
+Headless_image = None
 
-class Monstro(Enemy):
-    type = 'monstro'
+class Head(Enemy):
     image = None
     
-    IDLE = ()
+    IDLE_HEAD = ([0, 208, 0, 2, 1, 1], [0, 208, 0, 2, 1, 1], [0, 208, 0, 2, 1, 1], [0, 208, 0, 2, 1, 1], [0, 208, 0, 2, 1, 1],
+            [0, 208, 0, 2, 1, 1], [0, 208, 0, 1, 1.03, 0.97], [0, 208, 0, 1, 1.03, 0.97], [0, 208, 0, 1, 1.03, 0.97], [0, 208, 0, 1, 1.03, 0.97],
+            [0, 208, 0, 1, 1.03, 0.97], [0, 208, 0, 1, 1.03, 0.97], [0, 208, 0, 0, 0.95, 1.05], [0, 208, 0, 0, 0.95, 1.05], [0, 208, 0, 0, 0.95, 1.05],
+            [0, 208, 0, 0, 0.95, 1.05], [0, 208, 0, 0, 0.95, 1.05], [0, 208, 0, 0, 0.95, 1.05], [0, 208, 0, 1, 0.96, 1.04], [0, 208, 0, 1, 0.96, 1.04],
+            [0, 208, 0, 1, 0.96, 1.04], [0, 208, 0, 1, 0.96, 1.04], [0, 208, 0, 1, 0.96, 1.04], [0, 208, 0, 1, 0.96, 1.04], [0, 208, 0, 2, 1, 1],
+            [0, 208, 0, 2, 1, 1], [0, 208, 0, 2, 1, 1])
+    CHARGE_READY = ([0, 208, 0, 2, 1, 1], [0, 208, 0, 2, 1, 1], [48, 208, 0, 2, 1, 1], [48, 208, 0, 2, 1, 1], [128, 96, 0, -2, 1, 1],
+                [128, 96, 0, -2, 1, 1], [0, 96, -2, 0, 1.2, 0.8], [0, 96, -2, 0, 1.2, 0.8], [0, 96, 0, 2, 1, 1], [0, 96, 0, 2, 1, 1],
+                [0, 96, 0, 2, 1, 1], [0, 96, 0, 2, 1, 1], [0, 96, 0, 2, 1, 1], [0, 96, 0, 2, 1, 1], [0, 96, 0, 2, 1, 1],
+                [0, 96, 0, 2, 1, 1], [0, 96, 0, 2, 1, 1], [128, 96, -8, 0, 1, 1], [128, 96, -8, 0, 1, 1], [0, 96, -14, 6, 0.7, 1.3],
+                [0, 96, -14, 6, 0.7, 1.3], [48, 96, -16, 2, 1, 1], [48, 96, -16, 2, 1, 1])
+    CHARGE_SHAKE = ([0, 96, 0, 2, 1, 1], [0, 96, 0, 2, 1, 1], [0, 96, 0, 4, 1, 1], [0, 96, 0, 4, 1, 1])
+    ATTACK_HEAD = ([0, 208, 0, 2, 1, 1], [0, 208, 0, 2, 1, 1], [48, 208, 0, 4, 1, 1], [48, 208, 0, 4, 1, 1], [96, 208, 0, -2, 1, 1],
+                [96, 208, 0, -2, 1, 1], [48, 208, 0, -6, 1, 1], [48, 208, 0, -6, 1, 1], [0, 208, 0, -4, 1, 1], [0, 208, 0, -4, 1, 1],
+                [0, 208, 0, -4, 1, 1], [0, 208, 0, -4, 1, 1], [96, 160, 0, 0, 1, 1], [96, 160, 0, 0, 1, 1], [48, 160, 0, 10, 1, 1],
+                [48, 160, 0, 10, 1, 1], [0, 160, -2, 6, 1.05, 0.95], [0, 160, -2, 6, 0.95, 1.05], [0, 160, -2, 6, 1.05, 0.95], [0, 160, -2, 6, 0.95, 1.05],
+                [0, 160, -2, 6, 1.05, 0.95], [0, 160, -2, 6, 0.95, 1.05], [0, 160, -2, 6, 1.05, 0.95], [0, 160, -2, 6, 0.95, 1.05], [0, 160, -2, 6, 1.05, 0.95],
+                [0, 160, -2, 6, 0.95, 1.05], [0, 160, -2, 6, 1.05, 0.95], [0, 160, 0, 6, 1, 1], [0, 160, 0, 6, 1, 1], [48, 208, 0, 7, 1.1, 0.8],
+                [48, 208, 0, 7, 1.1, 0.8], [96, 208, 0, 2, 1, 1], [96, 208, 0, 2, 1, 1], [0, 208, 0, 2, 1, 1], [0, 208, 0, 2, 1, 1],
+                [0, 208, 0, 2, 1, 1], [0, 208, 0, 2, 1, 1])
+    HEAD_CLIP = {'idle': IDLE_HEAD, 'charge_ready': CHARGE_READY, 'charge_shake': CHARGE_SHAKE, 'attack': ATTACK_HEAD}
+    HEAD_FPA = {'idle': len(IDLE_HEAD), 'charge_ready': len(CHARGE_READY), 'charge_shake': len(CHARGE_SHAKE), 'attack': len(ATTACK_HEAD)}
+    HEAD_TPA = {'idle': 0.5, 'charge_ready': 1, 'charge_shake': 0.5, 'attack': 2}
     
-    CLIP = {'idle': IDLE}
-
+    SPEED = {'idle': 30, 'charge_ready': 0, 'charge_shake': 700, 'attack': 0}
+    
+    width = 192
+    height = 192
+    
+    CLIP_SIZE = 48
+    
     def __init__(self, x, y):
-        if Monstro.image == None:
-            Monstro.image = load_image('resources/monsters/monstro.png')
+        global Headless_image
+        if Headless_image == None:
+            Headless_image = load_image('resources/monsters/headlesshorseman.png')
+            Head.image = Headless_image
         super().__init__(x, y)
+        
+        self.hp = 1
+        self.speed = Head.SPEED['idle']
+        self.direction = random.random() * 2 * math.pi
+        self.action = 'idle'
+        self.frame = 0
+        
+        self.charge_start = 0
+        
+        self.wander_timer = 2
+        
+        self.build_behavior_tree()
+        
+        self.shadow_opacify = 0.4
         
     def update(self):
         self.bt.run()
+        self.frame = (self.frame + Head.HEAD_FPA[self.action] * 1.0 / Head.HEAD_TPA[self.action] * game_framework.frame_time) % Head.HEAD_FPA[self.action]
+        
+        if self.hp > 0:
+            self.x += self.speed * math.cos(self.direction) * game_framework.frame_time
+            self.y += self.speed * math.sin(self.direction) * game_framework.frame_time
+        elif self.hp == 0:
+            if self.frame == 0:
+                Enemy.dead_sfx.set_volume(5)
+                Enemy.dead_sfx.play()
+            self.frame = (self.frame + 12 * 1.0 / 0.7 * game_framework.frame_time)
+            if self.frame >= 11:
+                self.hp = -1
+                game_world.remove_object(self)
     
     def draw(self):
-        pass    
+        if self.hp > 0:
+            Enemy.shadow.opacify(self.shadow_opacify)
+            Enemy.shadow.draw(self.x, self.y - 20)
+            self.image.clip_draw(Head.HEAD_CLIP[self.action][int(self.frame)][0],
+                                Head.HEAD_CLIP[self.action][int(self.frame)][1],
+                                Head.CLIP_SIZE, Head.CLIP_SIZE,
+                                self.x + Head.HEAD_CLIP[self.action][int(self.frame)][2],
+                                self.y + Head.HEAD_CLIP[self.action][int(self.frame)][3],
+                                int(Head.width * Head.HEAD_CLIP[self.action][int(self.frame)][4]),
+                                int(Head.height * Head.HEAD_CLIP[self.action][int(self.frame)][5]))
+        elif self.hp == 0:
+            self.dead_effect.clip_draw(self.DEAD[int(self.frame)][0], self.DEAD[int(self.frame)][1], 64, 64, self.x, self.y, 196, 196)
         
     def handle_collision(self, other, group):
-        return super().handle_collision(other, group)
+        if group == 'enemy:tears':
+            if self.hp > 0 and other.hp > 0:
+                self.hp -= 1
+                if self.hp == 0:
+                    self.frame = 0
+                    self.speed = self.SPEED[self.action]
+                    return
     
     def build_behavior_tree(self):
+        wander = LeafNode("Wander", self.wander)
+        charge_ready = LeafNode("ChargeReady", self.charge_ready)
+        charge = LeafNode("Charge", self.charge)
+        attack = LeafNode("Attack", self.attack)
         
-        monstro = SequenceNode("Monstro")
+        headless_head = SequenceNode("Head")
+        headless_head.add_children(wander, charge_ready, charge, attack)
         
-        self.bt = BehaviorTree(monstro)
+        self.bt = BehaviorTree(headless_head)
+
+    def wander(self):
+        self.action = 'idle'
+        self.speed = Head.SPEED['idle']
+        self.wander_timer -= game_framework.frame_time
+        self.direction = 0
+        if self.wander_timer <= 0:
+            self.wander_timer = 2
+            self.frame = 0
+            self.charge_start = self.x
+            self.direction = 0
+            self.speed = Head.SPEED['charge_ready']
+            return BehaviorTree.SUCCESS
+        return BehaviorTree.RUNNING
+    
+    def charge_ready(self):
+        self.action = 'charge_ready'
+        if self.frame >= Head.HEAD_FPA['charge_ready'] - 1:
+            self.action = 'charge_shake'
+            self.speed = Head.SPEED['charge_shake']
+            self.frame = 0
+            self.screen_out = False
+            return BehaviorTree.SUCCESS
+        return BehaviorTree.RUNNING
+    
+    def charge(self):
+        self.action = 'charge_shake'
+        if self.x >= 1540:
+            self.x = -100
+            self.screen_out = True
+        elif self.x <= -100:
+            self.x = 1540
+            self.screen_out = True
+            
+        if abs(self.x - self.charge_start) < 100 and self.screen_out == True:
+            self.speed = Head.SPEED['attack']
+            self.frame = 0
+            self.is_shoot = [False, False, False]
+            return BehaviorTree.SUCCESS
+        
+        return BehaviorTree.RUNNING
+    
+    def attack(self):
+        self.action = 'attack'
+        if self.frame >= Head.HEAD_FPA['attack'] - 1:
+            self.action = 'idle'
+            self.speed = Head.SPEED['idle']
+            self.frame = 0
+            return BehaviorTree.SUCCESS
+        
+        if int(self.frame) == 20 and self.is_shoot[0] == False:
+            self.shoot()
+            self.is_shoot[0] = True
+        if int(self.frame) == 25 and self.is_shoot[1] == False:
+            self.shoot()
+            self.is_shoot[1] = True
+        if int(self.frame) == 30 and self.is_shoot[2] == False:
+            self.shoot()
+            self.is_shoot[2] = True
+            
+        return BehaviorTree.RUNNING
+
+    def shoot(self):
+        tears = []
+        direction = math.atan2(server.player.y - self.y, server.player.x - self.x)
+        for i in [-1, 0, 1]:
+            tears.append(Tear(self.x, self.y, direction + i * 0.1, 1, 400))
+        game_world.add_objects(tears, 4)
+        game_world.add_collision_group(None, tears, 'player:bullet')
+        game_world.add_collision_group(None, tears, 'room:tears')
+
+class Body(Enemy):
+    image = None
+    
+    IDLE_BODY = ([0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1],
+                [0, 48, 0, 0, 1, 1], [0, 48, 0, -1, 1, 1], [0, 48, 0, -1, 1, 1], [0, 48, 0, -1, 1, 1], [0, 48, 0, -1, 1, 1],
+                [0, 48, 0, -1, 1, 1], [0, 48, 0, -1, 1, 1], [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1],
+                [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1], [0, 48, 0, 6, 1, 1], [0, 48, 0, -1, 1, 1], [0, 48, 0, -1, 1, 1],
+                [0, 48, 0, -1, 1, 1], [0, 48, 0, -1, 1, 1], [0, 48, 0, -1, 1, 1], [0, 48, 0, -1, 1, 1], [0, 48, 0, 0, 1, 1],
+                [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1])
+    ATTACK_BODY = ([0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1], [80, 48, 0, 0, 1, 1], [80, 48, 0, 0, 1, 1], [80, 48, -8, 8, 1.1, 0.8],
+                [80, 48, -8, 8, 1.1, 0.8], [80, 48, -8, 15, 1.2, 0.7], [80, 48, -8, 15, 1.2, 0.7], [160, 48, 18, -9, 0.9, 1.2], [160, 48, 18, -9, 0.9, 1.2],
+                [160, 48, 16, -8, 0.95, 1.1], [160, 48, 16, -8, 0.95, 1.1], [0, 48, -5, 8, 1.1, 0.8], [0, 48, -5, 8, 1.1, 0.8], [0, 48, 0, 0, 1, 1.1],
+                [0, 48, 0, 0, 1, 1.1], [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1],
+                [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1],
+                [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1])
+    BODY_CLIP = {'idle': IDLE_BODY, 'attack': ATTACK_BODY}
+    BODY_FPA = {'idle': len(IDLE_BODY), 'attack': len(ATTACK_BODY)}
+    BODY_TPA = {'idle': 1, 'attack': 1}
+    
+    SPEED = {'idle': 80, 'attack': 0}
+    
+    width = 160
+    height = 96
+    
+    CLIP_SIZE = (80, 48)
+    
+    def __init__(self, x, y):
+        global Headless_image
+        if Headless_image == None:
+            Headless_image = load_image('resources/monsters/headlesshorseman.png')
+            Body.image = Headless_image
+        super().__init__(x, y)
+        
+        self.hp = 1
+        self.speed = Body.SPEED['idle']
+        self.direction = random.random() * 2 * math.pi
+        self.action = 'idle'
+        self.frame = 0
+        
+        self.build_behavior_tree()
+        self.wander_timer = 2
+        
+        self.shadow_opacify = 0.4
+        
+    def update(self):
+        self.bt.run()
+        self.frame = (self.frame + Body.BODY_FPA[self.action] * 1.0 / Body.BODY_TPA[self.action] * game_framework.frame_time) % Body.BODY_FPA[self.action]
+
+        if self.hp > 0:
+            self.x += self.speed * math.cos(self.direction) * game_framework.frame_time
+            self.y += self.speed * math.sin(self.direction) * game_framework.frame_time
+        elif self.hp == 0:
+            if self.frame == 0:
+                Enemy.dead_sfx.set_volume(5)
+                Enemy.dead_sfx.play()
+            self.frame = (self.frame + 12 * 1.0 / 0.7 * game_framework.frame_time)
+            if self.frame >= 11:
+                self.hp = -1
+                game_world.remove_object(self)
+    
+    def draw(self):
+        if self.hp > 0:
+            Enemy.shadow.opacify(self.shadow_opacify)
+            Enemy.shadow.draw(self.x, self.y - 20)
+            self.image.clip_draw(Body.BODY_CLIP[self.action][int(self.frame)][0],
+                                Body.BODY_CLIP[self.action][int(self.frame)][1],
+                                Body.CLIP_SIZE[0], Body.CLIP_SIZE[1],
+                                self.x + Body.BODY_CLIP[self.action][int(self.frame)][2],
+                                self.y + Body.BODY_CLIP[self.action][int(self.frame)][3],
+                                int(Body.width * Body.BODY_CLIP[self.action][int(self.frame)][4]),
+                                int(Body.height * Body.BODY_CLIP[self.action][int(self.frame)][5]))
+        elif self.hp == 0:
+            self.dead_effect.clip_draw(self.DEAD[int(self.frame)][0], self.DEAD[int(self.frame)][1], 64, 64, self.x, self.y, 196, 196)
+        
+        
+    def handle_collision(self, other, group):
+        if group == 'room:enemy':
+            if other.type == 'wall' or other.type == 'door':
+                self.direction = (self.direction + math.pi)
+                return
+        if group == 'enemy:tears':
+            if self.hp > 0 and other.hp > 0:
+                self.hp -= 1
+                if self.hp == 0:
+                    self.frame = 0
+                    self.speed = self.SPEED[self.action]
+                    return
+    
+    def build_behavior_tree(self):
+        wander_node = LeafNode("Wander", self.wander)
+        attack_node = LeafNode("Attack", self.attack)
+        
+        Headless = SequenceNode("Headless")
+        Headless.add_children(wander_node, attack_node)
+    
+        self.bt = BehaviorTree(Headless)
+        
+    def wander(self):
+        self.action = 'idle'
+        self.speed = Body.SPEED['idle']
+        self.direction = random.random() * 2 * math.pi
+        self.wander_timer -= game_framework.frame_time
+        if self.wander_timer <= 0:
+            self.wander_timer = random.randint(2, 5)
+            self.frame = 0
+            self.is_shoot = False
+            self.speed = Body.SPEED['attack']
+            return BehaviorTree.SUCCESS
+        return BehaviorTree.RUNNING
+    
+    def attack(self):
+        self.action = 'attack'
+        if self.frame >= Body.BODY_FPA['attack'] - 1:
+            self.action = 'idle'
+            self.speed = Body.SPEED['idle']
+            self.frame = 0
+            return BehaviorTree.SUCCESS
+        
+        if int(self.frame) == 10 and self.is_shoot == False:
+            self.shoot()
+            self.is_shoot = True
+            
+        return BehaviorTree.RUNNING
+
+    def shoot(self):
+        tears = []
+        step = 2 * math.pi / 8
+        for i in range(8):
+            tears.append(Tear(self.x, self.y, self.direction + step * i, 1, 350))
+        game_world.add_objects(tears, 4)
+        game_world.add_collision_group(None, tears, 'player:bullet')
+        game_world.add_collision_group(None, tears, 'room:tears')
 
     
 class BabyPlum(Enemy):
@@ -115,7 +396,7 @@ class BabyPlum(Enemy):
         
         self.build_behavior_tree()
 
-        self.shadow.opacify(0.4)
+        self.shadow_opacify = 0.4
         pass
     
     def update(self):
@@ -134,6 +415,7 @@ class BabyPlum(Enemy):
         self.frame = (self.frame + self.FPA[self.action] * 1.0 / self.TPA[self.action] * game_framework.frame_time) % self.FPA[self.action]
     
     def draw(self):
+        self.shadow.opacify(self.shadow_opacify)
         self.shadow.draw(self.x, self.y - 64)
         self.image.clip_draw(self.CLIP[self.action][int(self.frame)][0], # Crop X
                             self.CLIP[self.action][int(self.frame)][1], # Crop Y

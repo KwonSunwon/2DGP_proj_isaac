@@ -111,7 +111,7 @@ class Player(Creature):
             self.frame = (self.frame + FRAME_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 10   
             if self.hitCoolTime > 0:
                 self.hitCoolTime -= 1000 * game_framework.frame_time / 2
-        elif self.hp == 0:
+        elif self.hp <= 0:
             self.frame = self.frame + FRAME_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
             if int(self.frame) == 10:
                 Player.sfx['dead'].play()

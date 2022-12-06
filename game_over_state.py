@@ -9,13 +9,17 @@ import server
 name = "GameOverState"
 
 def enter():
-    print('enter game over state')
+    # print('enter game over state')
     
     if server.death_ui['portraits'] == None:
         server.death_ui['portraits'] = load_image('./resources/ui/death_portraits.png')
     if server.death_ui['select'] == None:
         server.death_ui['select'] = load_image('./resources/ui/death_select.png')
-    
+    if server.death_sfx == None:
+        server.death_sfx = load_music('./resources/sfx/game_over.ogg')
+        server.death_sfx.set_volume(10)
+        
+    server.death_sfx.play()
 
 def exit():
     game_world.clear()

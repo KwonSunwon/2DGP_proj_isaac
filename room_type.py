@@ -76,7 +76,7 @@ type_boss = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL,WALL, W
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, DOOR_TRAP, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
-            [WALL, None, None, None, None, None, None, BABY_PLUM, None, None,None, None, None, None, DOOR_BOSS],
+            [WALL, None, None, None, None, None, None, HEADLESS_BODY, None, None,None, None, None, None, DOOR_BOSS],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],
             [WALL, None, None, None, None, None, None, None, None, None,None, None, None, None, WALL],

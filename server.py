@@ -7,3 +7,4 @@ bg_black = None
 bg_caves = None
 
 death_ui = {'portraits': None, 'select': None}
+death_sfx = None
