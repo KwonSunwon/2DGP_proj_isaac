@@ -12,6 +12,7 @@ import enemy
 import boss
 
 import stage_change_state as StageChangeState
+import clear_state as ClearState
 
 width = 1440
 height = 864
@@ -211,19 +212,15 @@ class Stage:
 
     def changeStage(self, level):
         Stage.bgm_caves.stop()
-        print('bgm stop')
-        
+            
         game_framework.push_state(StageChangeState)
-        print('push state')
-        
+
         for e in self.stage[self.playerPos[0]][self.playerPos[1]].enemy:
             game_world.remove_object(e)
         for o in self.stage[self.playerPos[0]][self.playerPos[1]].objects:
             game_world.remove_object(o)
         game_world.objects[4] = []
-        print('remove objects')
-        
+
         self.level = level
         # print(self.level)
         self.set_stage(self.level)
-        print('set stage')

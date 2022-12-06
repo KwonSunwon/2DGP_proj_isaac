@@ -79,7 +79,7 @@ class Tear(Creature):
         elif self.hp == 0:
             self.image.clip_draw(self.CLIP_POS[int(self.kill_frame)][0], self.CLIP_POS[int(self.kill_frame)][1], 64, 64, self.x, self.y, self.draw_width + 64, self.draw_height + 64)
         
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
             
             
     def handle_collision(self, other, group):
@@ -87,7 +87,7 @@ class Tear(Creature):
         if group == 'room:tears':
             if other.type == 'poop' and other.hp > 0:
                 self.hp = 0
-            elif other.type != 'poop' and other.type != 'spike':
+            elif other.type != 'poop' and other.type != 'spike' and other.type != 'trapdoor':
                 self.hp = 0
         elif group == 'enemy:tears':
             self.hp = 0

@@ -4,6 +4,7 @@ import game_framework
 import game_world
 
 import game_over_state
+import clear_state as ClearState
 
 from math import pi
 
@@ -151,7 +152,7 @@ class Player(Creature):
                                             int(IMAGE_SIZE * CLIP_DEAD['ghost'][frame_ghost][4]),
                                             int(IMAGE_SIZE * CLIP_DEAD['ghost'][frame_ghost][5]))
             
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         
     def handle_event(self, event):
         if event.type == SDL_KEYDOWN:
@@ -247,9 +248,12 @@ class Player(Creature):
             elif other.type == 'poop' and other.hp != 0:
                 self.x, self.y = self.prevX, self.prevY
                 
-            elif other.type == 'trapdoor':
-                server.stage.changeStage(server.stage.level + 1)
-                self.x, self.y = 720, 408
+            elif other.type == 'trapdoor' and other.isOpen:
+                if server.stage.level == 2:
+                    game_framework.change_state(ClearState)
+                if server.stage.level == 1:
+                    server.stage.changeStage(server.stage.level + 1)
+                    self.x, self.y = 720, 408
                 pass
                     
         elif group == 'player:enemy' and self.hitCoolTime <= 0:

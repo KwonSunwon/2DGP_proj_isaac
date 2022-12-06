@@ -14,9 +14,11 @@ import random
 import math
 
 Headless_image = None
+Headless_sfx = None
 
 class Head(Enemy):
     image = None
+    sfx = None
     
     IDLE_HEAD = ([0, 208, 0, 2, 1, 1], [0, 208, 0, 2, 1, 1], [0, 208, 0, 2, 1, 1], [0, 208, 0, 2, 1, 1], [0, 208, 0, 2, 1, 1],
             [0, 208, 0, 2, 1, 1], [0, 208, 0, 1, 1.03, 0.97], [0, 208, 0, 1, 1.03, 0.97], [0, 208, 0, 1, 1.03, 0.97], [0, 208, 0, 1, 1.03, 0.97],
@@ -44,19 +46,23 @@ class Head(Enemy):
     
     SPEED = {'idle': 30, 'charge_ready': 0, 'charge_shake': 700, 'attack': 0}
     
-    width = 192
-    height = 192
+    width = 96
+    height = 96
     
     CLIP_SIZE = 48
     
     def __init__(self, x, y):
-        global Headless_image
+        global Headless_image, Headless_sfx
         if Headless_image == None:
             Headless_image = load_image('resources/monsters/headlesshorseman.png')
-            Head.image = Headless_image
+        if Headless_sfx == None:
+            Headless_sfx = load_wav('resources/sfx/boss1_shoot.wav')
+            Headless_sfx.set_volume(20)
+        Head.image = Headless_image
+        Head.sfx = Headless_sfx
         super().__init__(x, y)
         
-        self.hp = 1
+        self.hp = 10
         self.speed = Head.SPEED['idle']
         self.direction = random.random() * 2 * math.pi
         self.action = 'idle'
@@ -77,7 +83,7 @@ class Head(Enemy):
         if self.hp > 0:
             self.x += self.speed * math.cos(self.direction) * game_framework.frame_time
             self.y += self.speed * math.sin(self.direction) * game_framework.frame_time
-        elif self.hp == 0:
+        else:
             if self.frame == 0:
                 Enemy.dead_sfx.set_volume(5)
                 Enemy.dead_sfx.play()
@@ -99,6 +105,8 @@ class Head(Enemy):
                                 int(Head.height * Head.HEAD_CLIP[self.action][int(self.frame)][5]))
         elif self.hp == 0:
             self.dead_effect.clip_draw(self.DEAD[int(self.frame)][0], self.DEAD[int(self.frame)][1], 64, 64, self.x, self.y, 196, 196)
+            
+        #draw_rectangle(*self.get_bb())
         
     def handle_collision(self, other, group):
         if group == 'enemy:tears':
@@ -182,6 +190,7 @@ class Head(Enemy):
         return BehaviorTree.RUNNING
 
     def shoot(self):
+        self.sfx.play()
         tears = []
         direction = math.atan2(server.player.y - self.y, server.player.x - self.x)
         for i in [-1, 0, 1]:
@@ -192,6 +201,7 @@ class Head(Enemy):
 
 class Body(Enemy):
     image = None
+    sfx = None
     
     IDLE_BODY = ([0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1], [0, 48, 0, 0, 1, 1],
                 [0, 48, 0, 0, 1, 1], [0, 48, 0, -1, 1, 1], [0, 48, 0, -1, 1, 1], [0, 48, 0, -1, 1, 1], [0, 48, 0, -1, 1, 1],
@@ -217,13 +227,17 @@ class Body(Enemy):
     CLIP_SIZE = (80, 48)
     
     def __init__(self, x, y):
-        global Headless_image
+        global Headless_image, Headless_sfx
         if Headless_image == None:
             Headless_image = load_image('resources/monsters/headlesshorseman.png')
-            Body.image = Headless_image
+        if Headless_sfx == None:
+            Headless_sfx = load_wav('resources/sfx/boss1_shoot.wav')
+            Headless_sfx.set_volume(20)
+        Body.image = Headless_image
+        Body.sfx = Headless_sfx
         super().__init__(x, y)
         
-        self.hp = 1
+        self.hp = 10
         self.speed = Body.SPEED['idle']
         self.direction = random.random() * 2 * math.pi
         self.action = 'idle'
@@ -263,6 +277,8 @@ class Body(Enemy):
                                 int(Body.height * Body.BODY_CLIP[self.action][int(self.frame)][5]))
         elif self.hp == 0:
             self.dead_effect.clip_draw(self.DEAD[int(self.frame)][0], self.DEAD[int(self.frame)][1], 64, 64, self.x, self.y, 196, 196)
+        
+        #draw_rectangle(*self.get_bb())
         
         
     def handle_collision(self, other, group):
@@ -315,6 +331,7 @@ class Body(Enemy):
         return BehaviorTree.RUNNING
 
     def shoot(self):
+        self.sfx.play()
         tears = []
         step = 2 * math.pi / 8
         for i in range(8):
@@ -327,6 +344,7 @@ class Body(Enemy):
 class BabyPlum(Enemy):
     type = 'babyplum'
     image = None
+    sfx = None
     
     ATTACK_LIST = ['pattern1', 'pattern2']
     
@@ -379,6 +397,9 @@ class BabyPlum(Enemy):
     def __init__(self, x, y):
         if BabyPlum.image == None:
             BabyPlum.image = load_image('resources/monsters/babyplum.png')
+        if BabyPlum.sfx == None:
+            BabyPlum.sfx = load_wav('resources/sfx/boos2_shoot.wav')
+            BabyPlum.sfx.set_volume(20)
         super().__init__(x, y)
         
         self.hp = 20
@@ -406,7 +427,7 @@ class BabyPlum(Enemy):
             self.x += self.speed * math.cos(self.direction) * game_framework.frame_time
             self.y += self.speed * math.sin(self.direction) * game_framework.frame_time
             
-        elif self.hp == 0:
+        elif self.hp <= 0:
             self.action = 'death'
             if self.frame >= self.FPA[self.action] - 1:
                 self.hp = -1
@@ -429,7 +450,7 @@ class BabyPlum(Enemy):
             dead_effect_frame = int(self.frame % len(self.DEAD))
             self.dead_effect.clip_draw(self.DEAD[dead_effect_frame][0], self.DEAD[dead_effect_frame][1], 64, 64, self.x, self.y - 28, 160, 160)
         
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
         pass
     
     def handle_collision(self, other, group):
@@ -529,7 +550,7 @@ class BabyPlum(Enemy):
         return BehaviorTree.RUNNING
     
     def shoot(self, way, speed = 600):
-        # print('shoot')
+        BabyPlum.sfx.play()
         tears = []
         step = 2 * math.pi / way
         for i in range(way):

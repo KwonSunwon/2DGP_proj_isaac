@@ -7,4 +7,4 @@ import start_state as startState
 if __name__ == '__main__':
     open_canvas(1440, 864)
     game_framework.run(startState)
-    close_canvas()
+    close_canvas() 

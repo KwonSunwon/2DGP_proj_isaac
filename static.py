@@ -24,7 +24,7 @@ class Static:
         pass
 
     def draw(self):
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         pass
 
     def handle_event(self, event):
@@ -72,7 +72,7 @@ class Rock(Static):
             elif self.rock_type == 2:
                 self.image.clip_draw(64, 128, CLIP_SIZE, CLIP_SIZE, self.x + self.WIDTH//2, self.y + self.WIDTH//2, self.WIDTH + 4, self.HEIGHT + 4)
         
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
     pass
 
 
@@ -87,7 +87,7 @@ class Spike(Static):
         
     def draw(self):
         self.image.clip_draw(0, 128, 32, 32, self.x + self.WIDTH//2, self.y + self.WIDTH//2, self.WIDTH + 4, self.HEIGHT + 4)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
     pass
 
 
@@ -107,7 +107,7 @@ class Poop(Static):
         
     def draw(self):
         self.image.clip_draw(32 * (4 - self.hp), 0, 32, 32, self.x + self.WIDTH//2, self.y + self.WIDTH//2, self.WIDTH + 4, self.HEIGHT + 4)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         
     def handle_collision(self, other, group):
         if group == 'room:tears' and self.hp > 0:
@@ -185,7 +185,7 @@ class Door(Static):
                 door.clip_composite_draw(64, 144, 64, 48, pi, 'h', 7 * 96 + 48, 96, 192, 128)
             door.clip_composite_draw(0, 192, 64, 48, pi, 'h', 7 * 96 + 48, 96, 192, 128)
         
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         
     def get_bb(self):
         x = self.x * self.WIDTH + 64
@@ -221,14 +221,14 @@ class TrapDoor(Static):
             TrapDoor.image = pico2d.load_image('resources/objects/trap_door.png')
         super().__init__(x, y)
         
-        self.isOpen = True
+        self.isOpen = False
 
     def draw(self):
         if self.isOpen:
             self.image.clip_draw(0, 192, 64, 64, self.x + self.WIDTH//2, self.y + self.WIDTH//2, self.WIDTH + 96, self.HEIGHT + 96)
         else:
             self.image.clip_draw(0, 128, 64, 64, self.x + self.WIDTH//2, self.y + self.WIDTH//2, self.WIDTH + 96, self.HEIGHT + 96)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         pass
     
     def get_bb(self):
@@ -246,5 +246,5 @@ class ItemTable(Static):
         
     def draw(self):
         self.image.clip_draw(0, 224, 32, 32, self.x + self.WIDTH//2, self.y + self.WIDTH//2, self.WIDTH + 4, self.HEIGHT + 4)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         pass

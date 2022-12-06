@@ -130,7 +130,7 @@ class Fly(Enemy):
         elif self.hp == 0:
             self.image.clip_draw(self.die_pos[int(self.frame)][0], self.die_pos[int(self.frame)][1], 64, 64, self.x, self.y, self.draw_width, self.draw_height)
         
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def handle_collision(self, other, group):
         super().handle_collision(other, group)
@@ -241,7 +241,7 @@ class Meat(Enemy):
         elif self.hp == 0:
             self.dead_effect.clip_draw(self.DEAD[int(self.frame)][0], self.DEAD[int(self.frame)][1], 64, 64, self.x, self.y, 96, 96)
 
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
         
 
     def wander(self):
@@ -450,7 +450,7 @@ class Charger(Enemy):
         elif self.hp == 0:
             self.dead_effect.clip_draw(self.DEAD[int(self.frame)][0], self.DEAD[int(self.frame)][1], 64, 64, self.x, self.y, 96, 96)
             
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
         pass
 
     def handle_event(self, event):
